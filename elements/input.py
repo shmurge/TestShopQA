@@ -1,0 +1,50 @@
+import allure
+from selenium.webdriver.common.action_chains import ActionChains as AC
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from elements.base_element import BaseElement
+
+
+class Input(BaseElement):
+
+    def __init__(self, browser, name, how, what):
+        super().__init__(browser, name, how, what)
+
+        self.name = f'Поле: {name}'
+
+    def clear_input(self):
+        action = AC(self.browser)
+        input_1 = self.get_element()
+        input_value = input_1.get_attribute("value")
+        with allure.step(f"Очистить: {self.name}"):
+            while len(input_value) > 0:
+                self.wait.until(EC.element_to_be_clickable(self.locator))
+                action.double_click(input_1)
+                action.send_keys_to_element(input_1, Keys.BACKSPACE).perform()
+                input_value = input_1.get_attribute("value")
+
+    def fill_input(self, data):
+        action = AC(self.browser)
+        input_1 = self.get_element()
+        with allure.step(f"Ввод данных в {self.name}"):
+            self.wait.until(EC.element_to_be_clickable(self.locator))
+            action.click(input_1)
+            action.send_keys_to_element(input_1, data).perform()
+
+        return data
+
+    def fill_autocomplete_input(self, data):
+        action = AC(self.browser)
+        input_1 = self.get_element()
+        with allure.step(f"Ввод данных в инпут {self.name} с автозаполнением"):
+            self.wait.until(EC.element_to_be_clickable(self.locator))
+            action.click(input_1)
+            action.send_keys_to_element(input_1, data)
+            action.send_keys_to_element(input_1, Keys.ENTER).perform()
+
+        return data
+
+    def check_placeholder(self, exp_placeholder):
+        act_placeholder = self.get_element().get_attribute('placeholder')
+        self.base_assertions.assert_data_equal_data(act_placeholder, exp_placeholder)
+        

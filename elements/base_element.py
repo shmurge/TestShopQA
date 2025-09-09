@@ -1,0 +1,100 @@
+import allure
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.action_chains import ActionChains as AC
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.wait import WebDriverWait
+#from selenium.webdriver.common.by import By
+from assertions.base_assertions import BaseAssertions
+from time import sleep
+
+
+
+class BaseElement:
+
+    def __init__(self, browser: WebDriver, name, how, what):
+        self.browser = browser
+        self.name = name
+        self.locator = how, what
+        self.wait = WebDriverWait(browser, timeout=15, poll_frequency=1)
+        self.base_assertions = BaseAssertions()
+
+    def get_element(self):
+        self.wait.until(EC.visibility_of_element_located(self.locator))
+        return self.browser.find_element(*self.locator)
+
+    def get_elements(self):
+        self.wait.until(EC.visibility_of_element_located(self.locator))
+        return self.browser.find_elements(*self.locator)
+
+    def get_element_by_text(self, text):
+        with allure.step(f'Поиск элемента: {text}'):
+            self.wait.until(EC.visibility_of_element_located(('xpath', f"//*[text()='{text}']")))
+            element = self.browser.find_element('xpath', f"//*[text()='{text}']")
+
+        return element
+
+    def select_element_by_text(self, text):
+        with allure.step(f'Выбрать элемент: {text}'):
+            self.wait.until(EC.visibility_of_element_located(('xpath', f"//*[text()='{text}']")))
+            element = self.browser.find_element('xpath', f"//*[text()='{text}']")
+            self.wait.until(EC.element_to_be_clickable(element))
+            element.click()
+
+    def click(self, element=None):
+        element = element if element else self.get_element()
+        with allure.step(f"Клик по: {self.name}"):
+            self.wait.until(EC.element_to_be_clickable(element))
+            element.click()
+
+    def double_click(self, element=None):
+        element = element if element else self.get_element()
+        with allure.step(f"Двойной клик по: {self.name}"):
+            self.wait.until(EC.element_to_be_clickable(element))
+            action = AC(self.browser)
+            action.double_click(element).perform()
+
+    def submit(self, element=None):
+        with allure.step('Подтвердить'):
+            element = element if element else self.get_element()
+            with allure.step(f"Подтвердить ввод в {self.name}"):
+                element.submit()
+
+    def scroll_to_element(self, element=None):
+        element = element if element else self.get_element()
+        self.browser.execute_script(
+            "arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element
+        )
+
+    def move_to_element(self, element=None):
+        element = element if element else self.get_element()
+        action = AC(self.browser)
+        action.move_to_element(element)
+        action.perform()
+
+    def get_text_of_element(self, element=None):
+        element = element if element else self.get_element()
+
+        return element.text
+
+    def is_visible(self, element=None):
+        element = element if element else self.locator
+        try:
+            self.wait.until(EC.visibility_of_element_located(element))
+        except TimeoutException:
+            return False
+        return True
+
+    def is_not_visible(self, timeout=1, frequency=0.5, element=None):
+        element = element if element else self.locator
+        self.wait = WebDriverWait(self.browser, timeout, frequency)
+        try:
+            self.wait.until_not(EC.visibility_of_element_located(element))
+        except TimeoutException:
+            return False
+        return True
+
+    def is_displayed(self, element=None):
+        element = element if element else self.get_element()
+
+        return element.is_displayed()
