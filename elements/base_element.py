@@ -27,7 +27,7 @@ class BaseElement:
         self.wait.until(EC.visibility_of_element_located(self.locator))
         return self.browser.find_elements(*self.locator)
 
-    def get_element_by_text(self, text):
+    def find_element_by_text(self, text):
         with allure.step(f'Поиск элемента: {text}'):
             self.wait.until(EC.visibility_of_element_located(('xpath', f"//*[text()='{text}']")))
             element = self.browser.find_element('xpath', f"//*[text()='{text}']")
