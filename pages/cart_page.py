@@ -11,9 +11,9 @@ class CartPage(HeaderPage):
     def __init__(self, browser):
         super().__init__(browser)
 
-        self.order_overview = BaseElement(self.browser, 'Обзор заказа', *CartPageLocators.ORDER_OVERVIEW)
+        self.order_overview = BaseElement(self.browser, 'Блок с заказами', *CartPageLocators.ORDER_OVERVIEW)
 
-    def cart_page_is_displayed(self):
-        with allure.step('Отображается страница корзины'):
-            assert self.order_overview.is_visible(), 'Страница корзины не отображается!'
+    def order_overview_is_displayed(self):
+        with allure.step(f'{self.order_overview.name} отображается'):
+            assert self.order_overview.is_visible(), f'{self.order_overview.name} не отображается!'
 

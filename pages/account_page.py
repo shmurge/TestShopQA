@@ -17,7 +17,19 @@ class AccountPage(HeaderPage):
         self.username = BaseElement(self.browser, 'Имя пользователя', *AccountPageLocators.USERNAME)
         self.user_email = BaseElement(self.browser, 'Email', *AccountPageLocators.USER_EMAIL)
 
-    def contact_information_is_displayed(self):
-        with allure.step('Отображается контактная информация'):
-            self.username.is_visible()
-            self.user_email.is_visible()
+    def user_information_is_correct(self, username, user_email):
+        with allure.step('Информация о пользователе корректна'):
+            self.check_username(username)
+            self.check_user_email(user_email)
+
+    def check_username(self, exp):
+        with allure.step(f'{self.username.name} соответствует'):
+            act = self.username.get_text_of_element().strip()
+
+            self.base_assertions.assert_data_equal_data(act, exp)
+
+    def check_user_email(self, exp):
+        with allure.step(f'{self.user_email.name} соответствует'):
+            act = self.user_email.get_text_of_element().strip()
+
+            self.base_assertions.assert_data_equal_data(act, exp)

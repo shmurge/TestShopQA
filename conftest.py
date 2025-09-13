@@ -1,11 +1,12 @@
 import pytest
 import allure
 import os
-from dotenv import load_dotenv, set_key
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
+
+from dotenv import load_dotenv, set_key
 
 
 def pytest_addoption(parser):

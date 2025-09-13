@@ -21,7 +21,11 @@ class InputData:
 class ErrorMessage:
     EMAIL_ALREADY_EXIST = 'Another user is already registered using this email address.'
     PASSWORDS_MISSMATCH = 'Passwords do not match; please retype them.'
+    WRONG_LOGIN_OR_PASSWORD = 'Wrong login/password'
 
 
 class PlaceHolder:
-    CREATE_ACCOUNT_USERNAME_INPUT = 'e.g. John Doe'
+    CREATE_ACCOUNT_FORM_USERNAME_INPUT = 'e.g. John Doe'
+
+    LOGIN_FORM_EMAIL_INPUT = 'Email'
+    LOGIN_FORM_PASSWORD_INPUT = 'Password'

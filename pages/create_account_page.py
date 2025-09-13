@@ -5,7 +5,6 @@ from elements.button import Button
 from elements.input import Input
 from config.links import Links
 from locators.locs_create_account_page import CreateAccountPageLocators
-# from locators.locs_account_page import AccountPageLocators
 from conftest import set_env_key
 
 from time import sleep
@@ -29,9 +28,9 @@ class CreateAccountPage(HeaderPage):
         self.sign_up_button = Button(self.browser, 'Зарегистрироваться', *CreateAccountPageLocators.BUTTON_SUBMIT)
         self.alert = BaseElement(self.browser, 'Алерт', *CreateAccountPageLocators.ALERT)
 
-    def create_account_page_is_displayed(self):
-        with allure.step('Страница создания аккаунта отображается'):
-            assert self.registration_form.is_visible(), 'Страница создания аккаунта не отображается!'
+    def registration_form_is_displayed(self):
+        with allure.step(f'{self.registration_form.name} отображается'):
+            assert self.registration_form.is_visible(), f'{self.registration_form.name} не отображается!'
 
     def fill_email(self, data, save_to_env=True):
         with allure.step(f'Заполнить {self.email_input.name}'):
@@ -67,24 +66,22 @@ class CreateAccountPage(HeaderPage):
     def fill_registration_form(self,
                                email,
                                username,
-                               password
-                               ):
+                               password,
+                               save_to_env=True):
         with allure.step(f'Заполнить {self.registration_form.name}'):
             self.registration_form.is_visible()
-            self.fill_email(email)
-            self.fill_username(username)
-            self.fill_password(password)
+            self.fill_email(email, save_to_env)
+            self.fill_username(username, save_to_env)
+            self.fill_password(password, save_to_env)
             self.fill_password_confirm(password)
             self.sign_up_button.click()
 
-    def should_be_correct_alert(self, exp_alert):
-        with allure.step('Проверка алерта с ошибкой'):
+    def error_alert_is_displayed(self, exp_alert):
+        with allure.step(f'{self.alert.name} отображается'):
             act_alert = self.alert.get_text_of_element().strip()
 
             self.base_assertions.assert_data_equal_data(act_alert, exp_alert)
 
-    def should_be_correct_placeholder(self, exp_placeholder):
-        with allure.step(f'{self.username_input.name}: проверка плэйсхолдера'):
-            act_placeholder = self.username_input.get_placeholder().strip()
-
-            self.base_assertions.assert_data_equal_data(act_placeholder, exp_placeholder)
+    def should_be_correct_placeholders_in_registration_form(self, exp_placeholder):
+        with allure.step(f'Проверить плэйсхолдер: {self.username_input.name}'):
+            self.username_input.check_placeholder(exp_placeholder)
