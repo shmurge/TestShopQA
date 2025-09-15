@@ -18,6 +18,10 @@ class InputData:
     VALID_PASSWORD = fake.password(length=8, lower_case=True, upper_case=True, digits=True, special_chars=True)
 
 
+class InfoMessage:
+    CART_IS_EMPTY = 'Your cart is empty!'
+
+
 class ErrorMessage:
     EMAIL_ALREADY_EXIST = 'Another user is already registered using this email address.'
     PASSWORDS_MISSMATCH = 'Passwords do not match; please retype them.'
