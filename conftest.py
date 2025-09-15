@@ -5,8 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
-
-from dotenv import load_dotenv, set_key
+from pages.login_page import LoginPage
+from pages.account_page import AccountPage
+from dotenv import load_dotenv
 
 
 def pytest_addoption(parser):
@@ -62,11 +63,19 @@ def browser(request):
     browser.quit()
 
 
-def set_env_key(key, value):
-    project_root = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(project_root, '.env')
+@pytest.fixture()
+def pre_login(browser):
+    load_dotenv()
 
-    load_dotenv(env_path)
+    page = LoginPage(browser)
+    page.open()
+    page.fill_login_form(
+        login=os.getenv('LOGIN'),
+        password=os.getenv('PASSWORD')
+    )
+    page = AccountPage(browser)
 
-    os.environ[key] = value
-    set_key(env_path, key, value)
+    page.user_information_is_correct(
+        username=os.getenv('USERNAME'),
+        user_email=os.getenv('LOGIN')
+    )

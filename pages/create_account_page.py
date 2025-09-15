@@ -1,11 +1,12 @@
 import allure
+import os
+from dotenv import load_dotenv, set_key
 from pages.header_page import HeaderPage
 from elements.base_element import BaseElement
 from elements.button import Button
 from elements.input import Input
 from config.links import Links
 from locators.locs_create_account_page import CreateAccountPageLocators
-from conftest import set_env_key
 
 from time import sleep
 
@@ -36,7 +37,7 @@ class CreateAccountPage(HeaderPage):
         with allure.step(f'Заполнить {self.email_input.name}'):
             self.email_input.fill_input(data)
             if save_to_env:
-                set_env_key('LOGIN', data)
+                self.set_env_key('LOGIN', data)
 
         return data
 
@@ -44,7 +45,7 @@ class CreateAccountPage(HeaderPage):
         with allure.step(f'Заполнить {self.username_input.name}'):
             self.username_input.fill_input(data)
             if save_to_env:
-                set_env_key('USERNAME', data)
+                self.set_env_key('USERNAME', data)
 
         return data
 
@@ -52,7 +53,7 @@ class CreateAccountPage(HeaderPage):
         with allure.step(f'Заполнить {self.password_input.name}'):
             self.password_input.fill_input(data)
             if save_to_env:
-                set_env_key('PASSWORD', data)
+                self.set_env_key('PASSWORD', data)
 
         return data
 
@@ -85,3 +86,9 @@ class CreateAccountPage(HeaderPage):
     def should_be_correct_placeholders_in_registration_form(self, exp_placeholder):
         with allure.step(f'Проверить плэйсхолдер: {self.username_input.name}'):
             self.username_input.check_placeholder(exp_placeholder)
+
+    @staticmethod
+    def set_env_key(key, value):
+        load_dotenv('.env')
+        os.environ[key] = value
+        set_key('.env', key, value)

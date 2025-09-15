@@ -16,7 +16,6 @@ class TestCreateAccountPage(BaseTest):
             username=InputData.USERNAME,
             password=InputData.VALID_PASSWORD)
 
-        self.account_page.is_opened()
         self.account_page.user_information_is_correct(
             username=InputData.USERNAME,
             user_email=InputData.VALID_EMAIL
@@ -58,7 +57,7 @@ class TestCreateAccountPage(BaseTest):
     def test_goto_login_page(self):
         self.create_account_page.open()
         self.create_account_page.is_opened()
-        self.header_page.go_to_login_page()
+        self.header_page.goto_login_page()
         self.login_page.is_opened()
         self.login_page.login_form_is_displayed()
 
@@ -66,7 +65,7 @@ class TestCreateAccountPage(BaseTest):
     def test_goto_cart_page(self):
         self.create_account_page.open()
         self.create_account_page.is_opened()
-        self.header_page.go_to_cart_page()
+        self.header_page.goto_cart_page()
         self.cart_page.is_opened()
         self.cart_page.order_overview_is_displayed()
 
@@ -74,6 +73,6 @@ class TestCreateAccountPage(BaseTest):
     def test_goto_main_page(self):
         self.create_account_page.open()
         self.create_account_page.is_opened()
-        self.header_page.go_to_main_page()
+        self.header_page.goto_main_page()
         self.main_page.is_opened()
         self.main_page.main_page_is_displayed()
