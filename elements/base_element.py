@@ -90,3 +90,7 @@ class BaseElement:
         element = element if element else self.get_element()
 
         return element.is_displayed()
+
+    def get_attribute(self, attribute):
+
+        return self.get_element().get_attribute(attribute)
