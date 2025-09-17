@@ -3,9 +3,7 @@ from selenium.webdriver.common.action_chains import ActionChains as AC
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
-from assertions.base_assertions import BaseAssertions
 from time import sleep
-
 
 
 class BaseElement:
@@ -15,7 +13,6 @@ class BaseElement:
         self.name = name
         self.locator = how, what
         self.wait = WebDriverWait(browser, timeout=15, poll_frequency=1)
-        self.base_assertions = BaseAssertions()
 
     def get_element(self):
         self.wait.until(EC.visibility_of_element_located(self.locator))
