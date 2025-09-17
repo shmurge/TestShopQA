@@ -19,5 +19,12 @@ class ProductPage(BasePage):
             act_title = self.product_title.get_text_of_element().strip()
             act_price = self.product_price.get_text_of_element().strip()
 
-            self.base_assertions.assert_data_equal_data(act_title, exp_title)
-            self.base_assertions.assert_data_equal_data(act_price, exp_price)
+            assert act_title == exp_title, (f'Некорректное наименование товара\n'
+                                            f'ОР: {exp_title}\n'
+                                            f'ФР: {act_title}\n'
+                                            f'{self.attach_screenshot(self.product_title.name)}')
+
+            assert act_title == exp_title, (f'Некорректная стоимость товара\n'
+                                            f'ОР: {exp_price}\n'
+                                            f'ФР: {act_price}\n'
+                                            f'{self.attach_screenshot(self.product_price.name)}')

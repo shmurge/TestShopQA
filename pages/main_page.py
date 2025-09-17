@@ -20,7 +20,8 @@ class MainPage(HeaderPage):
 
     def main_page_is_displayed(self):
         with allure.step('Отображается главная страница'):
-            assert self.search_input.is_visible(), 'Главная страница не отображается!'
+            assert self.search_input.is_visible(), (f'{self.search_input.name} не отображается!'
+                                                    f'{self.attach_screenshot(self.search_input.name)}')
 
     def select_random_product(self):
         titles = self.product_title.get_elements()

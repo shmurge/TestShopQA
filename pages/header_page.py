@@ -38,7 +38,10 @@ class HeaderPage(BasePage):
     def username_is_correct(self, exp):
         act = self.username.get_text_of_element().strip()
         with allure.step(f'{self.username.name} в хэдере соответствует'):
-            self.base_assertions.assert_data_equal_data(act, exp)
+            assert act == exp, (f'Некорректное имя пользователя в хэдере\n'
+                                f'ОР: {exp}\n'
+                                f'ФР: {act}\n'
+                                f'{self.attach_screenshot(self.username.name)}')
 
     def goto_my_account(self):
         with allure.step('Перейти в аккаунт'):
@@ -52,4 +55,5 @@ class HeaderPage(BasePage):
 
     def sign_in_button_is_displayed(self):
         with allure.step(f'{self.sign_in_button.name} отображается'):
-            self.sign_in_button.is_visible()
+            assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!'
+                                                      f'{self.attach_screenshot(self.sign_in_button.name)}')

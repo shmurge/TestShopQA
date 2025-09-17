@@ -20,8 +20,8 @@ class CreateAccountPage(HeaderPage):
         self.registration_form = BaseElement(
             self.browser, 'Форма регистрации', *CreateAccountPageLocators.REGISTRATION_FORM
         )
-        self.email_input = Input(self.browser, 'Email', *CreateAccountPageLocators.INPUT_LOGIN)
-        self.username_input = Input(self.browser, 'Имя пользователя', *CreateAccountPageLocators.INPUT_USERNAME)
+        self.email_input = Input(self.browser, 'Ваш Email', *CreateAccountPageLocators.INPUT_LOGIN)
+        self.username_input = Input(self.browser, 'Ваше имя', *CreateAccountPageLocators.INPUT_USERNAME)
         self.password_input = Input(self.browser, 'Пароль', *CreateAccountPageLocators.INPUT_PASSWORD)
         self.password_confirm_input = Input(
             self.browser, 'Подтверждение пароля', *CreateAccountPageLocators.INPUT_PASSWORD_CONFIRM
@@ -31,7 +31,8 @@ class CreateAccountPage(HeaderPage):
 
     def registration_form_is_displayed(self):
         with allure.step(f'{self.registration_form.name} отображается'):
-            assert self.registration_form.is_visible(), f'{self.registration_form.name} не отображается!'
+            assert self.registration_form.is_visible(), (f'{self.registration_form.name} не отображается!'
+                                                         f'{self.attach_screenshot(self.registration_form.name)}')
 
     def fill_email(self, data, save_to_env=True):
         with allure.step(f'Заполнить {self.email_input.name}'):
@@ -81,11 +82,19 @@ class CreateAccountPage(HeaderPage):
         with allure.step(f'{self.alert.name} отображается'):
             act_alert = self.alert.get_text_of_element().strip()
 
-            self.base_assertions.assert_data_equal_data(act_alert, exp_alert)
+            assert act_alert == exp_alert, (f'Некорректное имя пользователя в профиле\n'
+                                            f'ОР: {exp_alert}\n'
+                                            f'ФР: {act_alert}\n'
+                                            f'{self.attach_screenshot(self.alert.name)}')
 
     def should_be_correct_placeholders_in_registration_form(self, exp_placeholder):
         with allure.step(f'Проверить плэйсхолдер: {self.username_input.name}'):
-            self.username_input.check_placeholder(exp_placeholder)
+            act_placeholder = self.username_input.get_placeholder()
+            assert act_placeholder == exp_placeholder, \
+                (f'Некорректный плейсхолдер в {self.username_input.name}\n'
+                 f'ОР: {exp_placeholder}\n'
+                 f'ФР: {act_placeholder}\n'
+                 f'{self.attach_screenshot(self.username_input.name)}')
 
     @staticmethod
     def set_env_key(key, value):

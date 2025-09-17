@@ -19,11 +19,15 @@ class CartPage(HeaderPage):
         )
 
     def order_overview_is_displayed(self):
-        with allure.step(f'{self.order_overview.name} отображается'):
-            assert self.order_overview.is_visible(), f'{self.order_overview.name} не отображается!'
+        with (allure.step(f'{self.order_overview.name} отображается')):
+            assert self.order_overview.is_visible(), (f'{self.order_overview.name} не отображается!'
+                                                      f'{self.attach_screenshot(self.order_overview.name)}')
 
     def should_be_message_if_cart_is_empty(self):
         with allure.step(f'Отображается сообщение {self.empty_cart_message.name}'):
             act = self.empty_cart_message.get_text_of_element().strip()
 
-            self.base_assertions.assert_data_equal_data(act, InfoMessage.CART_IS_EMPTY)
+            assert act == InfoMessage.CART_IS_EMPTY, (f'Некорректное имя пользователя в профиле\n'
+                                                      f'ОР: {InfoMessage.CART_IS_EMPTY}\n'
+                                                      f'ФР: {act}\n'
+                                                      f'{self.attach_screenshot(self.empty_cart_message.name)}')

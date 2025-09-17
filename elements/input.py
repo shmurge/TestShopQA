@@ -42,7 +42,5 @@ class Input(BaseElement):
 
         return data
 
-    def check_placeholder(self, exp_placeholder):
-        act_placeholder = self.get_element().get_attribute('placeholder').strip()
-
-        self.base_assertions.assert_data_equal_data(act_placeholder, exp_placeholder)
+    def get_placeholder(self):
+        return self.get_element().get_attribute('placeholder').strip()

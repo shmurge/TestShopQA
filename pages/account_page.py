@@ -23,13 +23,19 @@ class AccountPage(HeaderPage):
             self.check_user_email(user_email)
 
     def check_username(self, exp):
-        with allure.step(f'{self.username.name} соответствует'):
+        with allure.step(f'{self.username.name} в профиле корректное'):
             act = self.username.get_text_of_element().strip()
 
-            self.base_assertions.assert_data_equal_data(act, exp)
+            assert act == exp, (f'Некорректное имя пользователя в профиле\n'
+                                f'ОР: {exp}\n'
+                                f'ФР: {act}\n'
+                                f'{self.attach_screenshot(self.username.name)}')
 
     def check_user_email(self, exp):
-        with allure.step(f'{self.user_email.name} соответствует'):
+        with allure.step(f'{self.user_email.name} в профиле корректный'):
             act = self.user_email.get_text_of_element().strip()
 
-            self.base_assertions.assert_data_equal_data(act, exp)
+            assert act == exp, (f'Некорректный Email в профиле\n'
+                                f'ОР: {exp}\n'
+                                f'ФР: {act}\n'
+                                f'{self.attach_screenshot(self.user_email.name)}')
