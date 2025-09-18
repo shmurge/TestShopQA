@@ -1,11 +1,12 @@
 import allure
 from selenium.webdriver.support import expected_conditions as EC
+
+from config.links import Links
 from elements.base_element import BaseElement
 from elements.button import Button
 from elements.input import Input
-from pages.header_page import HeaderPage
-from config.links import Links
 from locators.locs_account_page import AccountPageLocators
+from pages.header_page import HeaderPage
 
 
 class AccountPage(HeaderPage):
@@ -28,8 +29,8 @@ class AccountPage(HeaderPage):
 
             assert act == exp, (f'Некорректное имя пользователя в профиле\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'{self.attach_screenshot(self.username.name)}')
+                                f'ФР: {act}',
+                                self.attach_screenshot(self.username.name))
 
     def check_user_email(self, exp):
         with allure.step(f'{self.user_email.name} в профиле корректный'):
@@ -37,5 +38,5 @@ class AccountPage(HeaderPage):
 
             assert act == exp, (f'Некорректный Email в профиле\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'{self.attach_screenshot(self.user_email.name)}')
+                                f'ФР: {act}',
+                                self.attach_screenshot(self.user_email.name))

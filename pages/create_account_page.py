@@ -1,14 +1,16 @@
-import allure
 import os
+
+import allure
 from dotenv import load_dotenv, set_key
-from pages.header_page import HeaderPage
+from time import sleep
+
+from config.links import Links
 from elements.base_element import BaseElement
 from elements.button import Button
 from elements.input import Input
-from config.links import Links
 from locators.locs_create_account_page import CreateAccountPageLocators
+from pages.header_page import HeaderPage
 
-from time import sleep
 
 
 class CreateAccountPage(HeaderPage):
@@ -31,8 +33,8 @@ class CreateAccountPage(HeaderPage):
 
     def registration_form_is_displayed(self):
         with allure.step(f'{self.registration_form.name} отображается'):
-            assert self.registration_form.is_visible(), (f'{self.registration_form.name} не отображается!'
-                                                         f'{self.attach_screenshot(self.registration_form.name)}')
+            assert self.registration_form.is_visible(), (f'{self.registration_form.name} не отображается!',
+                                                         self.attach_screenshot(self.registration_form.name))
 
     def fill_email(self, data, save_to_env=True):
         with allure.step(f'Заполнить {self.email_input.name}'):
@@ -78,23 +80,22 @@ class CreateAccountPage(HeaderPage):
             self.fill_password_confirm(password)
             self.sign_up_button.click()
 
-    def error_alert_is_displayed(self, exp_alert):
+    def error_alert_is_displayed(self, exp):
         with allure.step(f'{self.alert.name} отображается'):
-            act_alert = self.alert.get_text_of_element().strip()
+            act = self.alert.get_text_of_element().strip()
 
-            assert act_alert == exp_alert, (f'Некорректное имя пользователя в профиле\n'
-                                            f'ОР: {exp_alert}\n'
-                                            f'ФР: {act_alert}\n'
-                                            f'{self.attach_screenshot(self.alert.name)}')
+            assert act == exp, (f'Некорректный имя {self.alert.name}\n'
+                                f'ОР: {exp}\n'
+                                f'ФР: {act}',
+                                self.attach_screenshot(self.alert.name))
 
-    def should_be_correct_placeholders_in_registration_form(self, exp_placeholder):
-        with allure.step(f'Проверить плэйсхолдер: {self.username_input.name}'):
-            act_placeholder = self.username_input.get_placeholder()
-            assert act_placeholder == exp_placeholder, \
-                (f'Некорректный плейсхолдер в {self.username_input.name}\n'
-                 f'ОР: {exp_placeholder}\n'
-                 f'ФР: {act_placeholder}\n'
-                 f'{self.attach_screenshot(self.username_input.name)}')
+    def check_placeholders_in_registration_form(self, exp):
+        with allure.step(f'Проверить плэйсхолдер в {self.username_input.name}'):
+            act = self.username_input.get_placeholder()
+            assert act == exp, (f'Некорректный плейсхолдер в {self.username_input.name}\n'
+                                f'ОР: {exp}\n'
+                                f'ФР: {act}',
+                                self.attach_screenshot(self.username_input.name))
 
     @staticmethod
     def set_env_key(key, value):

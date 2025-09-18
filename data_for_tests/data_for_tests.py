@@ -33,3 +33,5 @@ class PlaceHolder:
 
     LOGIN_FORM_EMAIL_INPUT = 'Email'
     LOGIN_FORM_PASSWORD_INPUT = 'Password'
+
+    MAIN_PAGE_SEARCH_INPUT = 'Search...'

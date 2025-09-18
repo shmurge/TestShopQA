@@ -1,11 +1,12 @@
 import allure
 import pytest
-from elements.input import Input
-from pages.header_page import HeaderPage
+
 from config.links import Links
+from elements.input import Input
 from elements.base_element import BaseElement
 from elements.button import Button
 from locators.locs_login_page import LoginPageLocators
+from pages.header_page import HeaderPage
 
 
 class LoginPage(HeaderPage):
@@ -14,7 +15,7 @@ class LoginPage(HeaderPage):
     def __init__(self, browser):
         super().__init__(browser)
 
-        self.login_form = BaseElement(self.browser, 'Форма логина', *LoginPageLocators.LOGIN_FORM)
+        self.login_form = BaseElement(self.browser, 'Форма авторизации', *LoginPageLocators.LOGIN_FORM)
         self.email_input = Input(self.browser, 'Email', *LoginPageLocators.EMAIL_INPUT)
         self.password_input = Input(self.browser, 'Пароль', *LoginPageLocators.PASSWORD_INPUT)
         self.login_button = Button(self.browser, 'Войти', *LoginPageLocators.LOGIN_BUTTON)
@@ -23,8 +24,8 @@ class LoginPage(HeaderPage):
 
     def login_form_is_displayed(self):
         with allure.step(f'{self.login_form.name} отображается'):
-            assert self.login_form.is_visible(), (f'{self.login_form.name} не отображается!'
-                                                  f'{self.attach_screenshot(self.login_form.name)}')
+            assert self.login_form.is_visible(), (f'{self.login_form.name} не отображается!',
+                                                  self.attach_screenshot(self.login_form.name))
 
     def go_to_create_account_page(self):
         with allure.step('Перейти на страницу создания аккаунта'):
@@ -49,27 +50,27 @@ class LoginPage(HeaderPage):
             self.click_on_login_button()
 
     def should_be_correct_placeholders_in_login_form(self, exp_email_placeholder, exp_password_placeholder):
-        with allure.step(f'Проверить плэйсхолдеры в форме авторизации'):
+        with allure.step(f'Проверить плэйсхолдеры в {self.login_form.name}'):
             act_email_placeholder = self.email_input.get_placeholder()
             act_password_placeholder = self.password_input.get_placeholder()
 
             assert act_email_placeholder == exp_email_placeholder, \
                 (f'Некорректный плейсхолдер в {self.email_input.name}\n'
                  f'ОР: {exp_email_placeholder}\n'
-                 f'ФР: {act_email_placeholder}\n'
-                 f'{self.attach_screenshot(self.email_input.name)}')
+                 f'ФР: {act_email_placeholder}\n',
+                 self.attach_screenshot(self.email_input.name))
 
             assert act_email_placeholder == exp_email_placeholder, \
                 (f'Некорректный плейсхолдер в {self.password_input.name}\n'
                  f'ОР: {exp_password_placeholder}\n'
-                 f'ФР: {act_password_placeholder}\n'
-                 f'{self.attach_screenshot(self.password_input.name)}')
+                 f'ФР: {act_password_placeholder}\n',
+                 self.attach_screenshot(self.password_input.name))
 
     def error_alert_is_displayed(self, exp_alert):
         with allure.step(f'{self.alert.name} отображается'):
             act_alert = self.alert.get_text_of_element().strip()
 
-            assert act_alert == exp_alert, (f'Некорректный алерт на страницу авторизации!\n'
+            assert act_alert == exp_alert, (f'Некорректный {self.alert.name}\n'
                                             f'ОР: {exp_alert}\n'
-                                            f'ФР: {act_alert}\n'
-                                            f'{self.attach_screenshot(self.alert.name)}')
+                                            f'ФР: {act_alert}\n',
+                                            self.attach_screenshot(self.alert.name))

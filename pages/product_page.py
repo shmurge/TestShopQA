@@ -1,9 +1,10 @@
 import allure
-from pages.base_page import BasePage
+
 from elements.base_element import BaseElement
 from elements.button import Button
 from elements.input import Input
 from locators.locs_product_page import ProductPageLocators
+from pages.base_page import BasePage
 
 
 class ProductPage(BasePage):
@@ -21,10 +22,10 @@ class ProductPage(BasePage):
 
             assert act_title == exp_title, (f'Некорректное наименование товара\n'
                                             f'ОР: {exp_title}\n'
-                                            f'ФР: {act_title}\n'
-                                            f'{self.attach_screenshot(self.product_title.name)}')
+                                            f'ФР: {act_title}',
+                                            self.attach_screenshot(self.product_title.name))
 
             assert act_title == exp_title, (f'Некорректная стоимость товара\n'
                                             f'ОР: {exp_price}\n'
-                                            f'ФР: {act_price}\n'
-                                            f'{self.attach_screenshot(self.product_price.name)}')
+                                            f'ФР: {act_price}',
+                                            self.attach_screenshot(self.product_price.name))

@@ -1,8 +1,9 @@
 import allure
 import pytest
-from config.base_test import BaseTest
-
 from time import sleep
+
+from config.base_test import BaseTest
+from data_for_tests.data_for_tests import PlaceHolder
 
 
 @allure.suite('Главная страница')
@@ -38,6 +39,11 @@ class TestMainPage(BaseTest):
         self.cart_page.is_opened()
         self.cart_page.order_overview_is_displayed()
 
+    @allure.title('Проверка плэйсхолдера в инпуте поиска товара')
+    def test_check_placeholder_in_search_input(self):
+        self.main_page.open()
+        self.main_page.is_opened()
+        self.main_page.check_placeholder_in_search_input(PlaceHolder.MAIN_PAGE_SEARCH_INPUT)
 
     @allure.title('Выбор товара на главной странице')
     def test_select_product_on_main_page(self):

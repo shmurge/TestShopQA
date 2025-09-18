@@ -1,7 +1,8 @@
 import allure
+from time import sleep
+
 from config.base_test import BaseTest
 from data_for_tests.data_for_tests import UserData, InputData, ErrorMessage, PlaceHolder
-from time import sleep
 
 
 @allure.suite('Страница создания аккаунта')
@@ -74,5 +75,5 @@ class TestCreateAccountPage(BaseTest):
     def test_check_placeholders_in_registration_form(self):
         self.create_account_page.open()
         self.create_account_page.is_opened()
-        self.create_account_page.should_be_correct_placeholders_in_registration_form(
+        self.create_account_page.check_placeholders_in_registration_form(
             PlaceHolder.CREATE_ACCOUNT_FORM_USERNAME_INPUT)

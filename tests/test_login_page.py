@@ -1,8 +1,9 @@
 import allure
 import pytest
+from time import sleep
+
 from config.base_test import BaseTest
 from data_for_tests.data_for_tests import PlaceHolder, UserData, ErrorMessage
-from time import sleep
 
 
 @allure.suite('Страница логина')

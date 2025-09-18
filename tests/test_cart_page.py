@@ -1,8 +1,9 @@
 import allure
 import pytest
+from time import sleep
+
 from config.base_test import BaseTest
 
-from time import sleep
 
 
 @allure.suite('Корзина')

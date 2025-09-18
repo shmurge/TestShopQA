@@ -1,9 +1,10 @@
 import allure
-from pages.base_page import BasePage
+
 from elements.base_element import BaseElement
 from elements.button import Button
 from elements.input import Input
 from locators.locs_header_page import HeaderPageLocators
+from pages.base_page import BasePage
 
 
 class HeaderPage(BasePage):
@@ -40,8 +41,8 @@ class HeaderPage(BasePage):
         with allure.step(f'{self.username.name} в хэдере соответствует'):
             assert act == exp, (f'Некорректное имя пользователя в хэдере\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'{self.attach_screenshot(self.username.name)}')
+                                f'ФР: {act}',
+                                self.attach_screenshot(self.username.name))
 
     def goto_my_account(self):
         with allure.step('Перейти в аккаунт'):
@@ -55,5 +56,5 @@ class HeaderPage(BasePage):
 
     def sign_in_button_is_displayed(self):
         with allure.step(f'{self.sign_in_button.name} отображается'):
-            assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!'
-                                                      f'{self.attach_screenshot(self.sign_in_button.name)}')
+            assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!',
+                                                      self.attach_screenshot(self.sign_in_button.name))

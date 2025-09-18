@@ -1,11 +1,13 @@
-import allure
 import random
-from pages.header_page import HeaderPage
+
+import allure
+
 from config.links import Links
 from elements.base_element import BaseElement
 from elements.button import Button
 from elements.input import Input
 from locators.locs_main_page import MainPageLocators
+from pages.header_page import HeaderPage
 
 
 class MainPage(HeaderPage):
@@ -20,8 +22,17 @@ class MainPage(HeaderPage):
 
     def main_page_is_displayed(self):
         with allure.step('Отображается главная страница'):
-            assert self.search_input.is_visible(), (f'{self.search_input.name} не отображается!'
-                                                    f'{self.attach_screenshot(self.search_input.name)}')
+            assert self.search_input.is_visible(), (f'{self.search_input.name} не отображается!',
+                                                    self.attach_screenshot(self.search_input.name))
+
+    def check_placeholder_in_search_input(self, exp):
+        with allure.step(f'Проверить плэйсхолдер в {self.search_input.name}'):
+            act = self.search_input.get_placeholder()
+
+            assert act == exp, (f'Некорректный плэйсхолдер\n'
+                                               f'ОР: {exp}\n'
+                                               f'ФР: {act}',
+                                               self.attach_screenshot(self.search_input.name))
 
     def select_random_product(self):
         titles = self.product_title.get_elements()
