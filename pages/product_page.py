@@ -17,8 +17,8 @@ class ProductPage(BasePage):
 
     def check_title_and_price(self, exp_title, exp_price):
         with allure.step('Проверить наименование и стоимость товара'):
-            act_title = self.product_title.get_text_of_element().strip()
-            act_price = self.product_price.get_text_of_element().strip()
+            act_title = self.product_title.get_text_of_element()
+            act_price = self.product_price.get_text_of_element()
 
             assert act_title == exp_title, (f'Некорректное наименование товара\n'
                                             f'ОР: {exp_title}\n'

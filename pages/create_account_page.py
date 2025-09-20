@@ -12,7 +12,6 @@ from locators.locs_create_account_page import CreateAccountPageLocators
 from pages.header_page import HeaderPage
 
 
-
 class CreateAccountPage(HeaderPage):
     PAGE_URL = Links.CREATE_ACCOUNT_PAGE
 
@@ -82,7 +81,7 @@ class CreateAccountPage(HeaderPage):
 
     def error_alert_is_displayed(self, exp):
         with allure.step(f'{self.alert.name} отображается'):
-            act = self.alert.get_text_of_element().strip()
+            act = self.alert.get_text_of_element()
 
             assert act == exp, (f'Некорректный имя {self.alert.name}\n'
                                 f'ОР: {exp}\n'

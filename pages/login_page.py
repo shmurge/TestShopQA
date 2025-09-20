@@ -68,7 +68,7 @@ class LoginPage(HeaderPage):
 
     def error_alert_is_displayed(self, exp_alert):
         with allure.step(f'{self.alert.name} отображается'):
-            act_alert = self.alert.get_text_of_element().strip()
+            act_alert = self.alert.get_text_of_element()
 
             assert act_alert == exp_alert, (f'Некорректный {self.alert.name}\n'
                                             f'ОР: {exp_alert}\n'

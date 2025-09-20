@@ -37,7 +37,7 @@ class HeaderPage(BasePage):
             self.main_search_button.click()
 
     def username_is_correct(self, exp):
-        act = self.username.get_text_of_element().strip()
+        act = self.username.get_text_of_element()
         with allure.step(f'{self.username.name} в хэдере соответствует'):
             assert act == exp, (f'Некорректное имя пользователя в хэдере\n'
                                 f'ОР: {exp}\n'

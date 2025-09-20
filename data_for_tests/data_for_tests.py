@@ -16,10 +16,14 @@ class InputData:
     USERNAME = f'{fake.first_name()} {fake.last_name()}'
     VALID_EMAIL = fake.email()
     VALID_PASSWORD = fake.password(length=8, lower_case=True, upper_case=True, digits=True, special_chars=True)
+    PRODUCTS_SEARCH_QUERY = ['Desk', 'Chair', 'Warranty', 'Drawer', 'Box', 'Cabinet', 'Three-Seat Sofa']
 
 
 class InfoMessage:
     CART_IS_EMPTY = 'Your cart is empty!'
+
+    def message_no_results(self, query):
+        return f'No results\nNo results for "{query}".'
 
 
 class ErrorMessage:

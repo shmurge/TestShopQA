@@ -3,7 +3,7 @@ import pytest
 from time import sleep
 
 from config.base_test import BaseTest
-from data_for_tests.data_for_tests import PlaceHolder
+from data_for_tests.data_for_tests import PlaceHolder, InputData, InfoMessage
 
 
 @allure.suite('Главная страница')
@@ -48,5 +48,20 @@ class TestMainPage(BaseTest):
     @allure.title('Выбор товара на главной странице')
     def test_select_product_on_main_page(self):
         self.main_page.open()
+        self.main_page.is_opened()
         title, price = self.main_page.select_random_product()
         self.product_page.check_title_and_price(title, price)
+
+    @allure.title('Поиск товара на главной странице')
+    @pytest.mark.parametrize('query', InputData.PRODUCTS_SEARCH_QUERY)
+    def test_search_product_on_main_page(self, query):
+        self.main_page.open()
+        self.main_page.is_opened()
+        self.main_page.search_product(query)
+        self.main_page.check_searching_result(query)
+
+    @allure.title('Поиск несуществующего товара на главной странице')
+    def test_search_non_existent_product_on_main_page(self):
+        self.main_page.open()
+        self.main_page.is_opened()
+        self.main_page.check_message_with_no_results()

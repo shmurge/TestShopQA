@@ -26,7 +26,7 @@ class CartPage(HeaderPage):
 
     def should_be_message_if_cart_is_empty(self):
         with allure.step(f'Отображается сообщение {self.empty_cart_message.name}'):
-            act = self.empty_cart_message.get_text_of_element().strip()
+            act = self.empty_cart_message.get_text_of_element()
 
             assert act == InfoMessage.CART_IS_EMPTY, (f'Некорректное имя пользователя в профиле\n'
                                                       f'ОР: {InfoMessage.CART_IS_EMPTY}\n'

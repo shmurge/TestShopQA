@@ -25,7 +25,7 @@ class AccountPage(HeaderPage):
 
     def check_username(self, exp):
         with allure.step(f'{self.username.name} в профиле корректное'):
-            act = self.username.get_text_of_element().strip()
+            act = self.username.get_text_of_element()
 
             assert act == exp, (f'Некорректное имя пользователя в профиле\n'
                                 f'ОР: {exp}\n'
@@ -34,7 +34,7 @@ class AccountPage(HeaderPage):
 
     def check_user_email(self, exp):
         with allure.step(f'{self.user_email.name} в профиле корректный'):
-            act = self.user_email.get_text_of_element().strip()
+            act = self.user_email.get_text_of_element()
 
             assert act == exp, (f'Некорректный Email в профиле\n'
                                 f'ОР: {exp}\n'
