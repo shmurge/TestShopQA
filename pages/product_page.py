@@ -22,10 +22,10 @@ class ProductPage(BasePage):
 
             assert act_title == exp_title, (f'Некорректное наименование товара\n'
                                             f'ОР: {exp_title}\n'
-                                            f'ФР: {act_title}',
-                                            self.attach_screenshot(self.product_title.name))
+                                            f'ФР: {act_title}\n'
+                                            f'Скриншот {self.attach_screenshot(self.product_title.name)}')
 
             assert act_title == exp_title, (f'Некорректная стоимость товара\n'
                                             f'ОР: {exp_price}\n'
-                                            f'ФР: {act_price}',
-                                            self.attach_screenshot(self.product_price.name))
+                                            f'ФР: {act_price}\n'
+                                            f'Скриншот {self.attach_screenshot(self.product_price.name)}')

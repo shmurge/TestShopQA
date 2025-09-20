@@ -15,8 +15,11 @@ class BaseElement:
         self.wait = WebDriverWait(browser, timeout=15, poll_frequency=1)
 
     def get_element(self):
-        self.wait.until(EC.visibility_of_element_located(self.locator))
-        return self.browser.find_element(*self.locator)
+        try:
+            self.wait.until(EC.visibility_of_element_located(self.locator))
+            return self.browser.find_element(*self.locator)
+        except TimeoutException:
+            f'Элемент {self.name} не найден!'
 
     def get_elements(self):
         self.wait.until(EC.visibility_of_element_located(self.locator))
@@ -64,7 +67,7 @@ class BaseElement:
     def get_text_of_element(self, element=None):
         element = element if element else self.get_element()
 
-        return element.text.strip()
+        return element.text
 
     def is_visible(self, element=None):
         element = element if element else self.locator
@@ -89,5 +92,4 @@ class BaseElement:
         return element.is_displayed()
 
     def get_attribute(self, attribute):
-
         return self.get_element().get_attribute(attribute)

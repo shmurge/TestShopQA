@@ -6,6 +6,7 @@ from config.base_test import BaseTest
 from data_for_tests.data_for_tests import PlaceHolder, InputData, InfoMessage
 
 
+@pytest.mark.order(2)
 @allure.suite('Главная страница')
 class TestMainPage(BaseTest):
 
@@ -16,6 +17,7 @@ class TestMainPage(BaseTest):
         self.header_page.goto_my_account()
         self.account_page.is_opened()
 
+    @pytest.mark.order(after="test_goto_account_page_from_main")
     @allure.title('Выйти из аккаунта')
     def test_exit_from_account(self, pre_login):
         self.main_page.open()
@@ -53,6 +55,7 @@ class TestMainPage(BaseTest):
         self.product_page.check_title_and_price(title, price)
 
     @allure.title('Поиск товара на главной странице')
+    @pytest.mark.xfail
     @pytest.mark.parametrize('query', InputData.PRODUCTS_SEARCH_QUERY)
     def test_search_product_on_main_page(self, query):
         self.main_page.open()

@@ -1,13 +1,15 @@
+import os
+
 import pytest
 import allure
-import os
+
+from dotenv import load_dotenv
+from pages.login_page import LoginPage
+from pages.account_page import AccountPage
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
-from pages.login_page import LoginPage
-from pages.account_page import AccountPage
-from dotenv import load_dotenv
 
 
 def pytest_addoption(parser):

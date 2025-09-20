@@ -30,8 +30,8 @@ class MainPage(HeaderPage):
 
     def main_page_is_displayed(self):
         with allure.step('Отображается главная страница'):
-            assert self.search_input.is_visible(), (f'{self.search_input.name} не отображается!',
-                                                    self.attach_screenshot(self.search_input.name))
+            assert self.search_input.is_visible(), (f'{self.search_input.name} не отображается!\n'
+                                                    f'Скриншот {self.attach_screenshot(self.search_input.name)}')
 
     def check_placeholder_in_search_input(self, exp):
         with allure.step(f'Проверить плэйсхолдер в {self.search_input.name}'):
@@ -39,8 +39,8 @@ class MainPage(HeaderPage):
 
             assert act == exp, (f'Некорректный плэйсхолдер\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}',
-                                self.attach_screenshot(self.search_input.name))
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.search_input.name)}')
 
     def select_random_product(self):
         titles = self.product_title.get_elements()
@@ -79,8 +79,8 @@ class MainPage(HeaderPage):
             for title in titles:
                 assert keyword.lower() in title.lower(), (f'Некорректный результат поиска!\n'
                                                           f'Найденный товар {title},\n'
-                                                          f'не содержит {keyword} в наименовании!',
-                                                          self.attach_screenshot(title))
+                                                          f'не содержит {keyword} в наименовании!\n'
+                                                          f'Скриншот {self.attach_screenshot(title)}')
 
     def check_result_count(self):
         with allure.step('Корректное количество найденных товаров в счетчике'):
@@ -103,5 +103,5 @@ class MainPage(HeaderPage):
 
             assert act == exp, (f'Некорректно сообщение!\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}',
-                                self.attach_screenshot(self.message_no_searching_results.name))
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.message_no_searching_results.name)}')

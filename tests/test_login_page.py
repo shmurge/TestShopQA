@@ -6,6 +6,7 @@ from config.base_test import BaseTest
 from data_for_tests.data_for_tests import PlaceHolder, UserData, ErrorMessage
 
 
+@pytest.mark.order(1)
 @allure.suite('Страница логина')
 class TestLoginPage(BaseTest):
 
@@ -30,6 +31,7 @@ class TestLoginPage(BaseTest):
         self.main_page.is_opened()
         self.main_page.main_page_is_displayed()
 
+    #@pytest.mark.order(1)
     @allure.title('Авторизация пользователя')
     def test_user_authorization(self):
         self.login_page.open()

@@ -1,10 +1,12 @@
 import allure
+import pytest
 from time import sleep
 
 from config.base_test import BaseTest
 from data_for_tests.data_for_tests import UserData, InputData, ErrorMessage, PlaceHolder
 
 
+@pytest.mark.order(3)
 @allure.suite('Страница создания аккаунта')
 class TestCreateAccountPage(BaseTest):
 
@@ -32,6 +34,7 @@ class TestCreateAccountPage(BaseTest):
         self.main_page.is_opened()
         self.main_page.main_page_is_displayed()
 
+    #@pytest.mark.order(1)
     @allure.title('Создание аккаунта')
     def test_create_account(self):
         self.create_account_page.open()

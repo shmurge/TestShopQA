@@ -5,7 +5,6 @@ from time import sleep
 from config.base_test import BaseTest
 
 
-
 @allure.suite('Корзина')
 class TestCartPage(BaseTest):
     @allure.title('Если корзина пуста, пользователь увидит сообщение')

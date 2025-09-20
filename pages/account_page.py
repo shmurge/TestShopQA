@@ -15,8 +15,8 @@ class AccountPage(HeaderPage):
     def __init__(self, browser):
         super().__init__(browser)
 
-        self.username = BaseElement(self.browser, 'Имя пользователя', *AccountPageLocators.USERNAME)
-        self.user_email = BaseElement(self.browser, 'Email', *AccountPageLocators.USER_EMAIL)
+        self.username_in_account = BaseElement(self.browser, 'Имя пользователя', *AccountPageLocators.USERNAME)
+        self.user_email_in_account = BaseElement(self.browser, 'Email', *AccountPageLocators.USER_EMAIL)
 
     def user_information_is_correct(self, username, user_email):
         with allure.step('Информация о пользователе корректна'):
@@ -24,19 +24,19 @@ class AccountPage(HeaderPage):
             self.check_user_email(user_email)
 
     def check_username(self, exp):
-        with allure.step(f'{self.username.name} в профиле корректное'):
-            act = self.username.get_text_of_element()
+        with allure.step(f'{self.username_in_account.name} в профиле корректное'):
+            act = self.username_in_account.get_text_of_element()
 
             assert act == exp, (f'Некорректное имя пользователя в профиле\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}',
-                                self.attach_screenshot(self.username.name))
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.username_in_account.name)}')
 
     def check_user_email(self, exp):
-        with allure.step(f'{self.user_email.name} в профиле корректный'):
-            act = self.user_email.get_text_of_element()
+        with allure.step(f'{self.user_email_in_account.name} в профиле корректный'):
+            act = self.user_email_in_account.get_text_of_element()
 
             assert act == exp, (f'Некорректный Email в профиле\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}',
-                                self.attach_screenshot(self.user_email.name))
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.user_email_in_account.name)}')

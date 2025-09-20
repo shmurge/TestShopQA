@@ -24,8 +24,8 @@ class LoginPage(HeaderPage):
 
     def login_form_is_displayed(self):
         with allure.step(f'{self.login_form.name} отображается'):
-            assert self.login_form.is_visible(), (f'{self.login_form.name} не отображается!',
-                                                  self.attach_screenshot(self.login_form.name))
+            assert self.login_form.is_visible(), (f'{self.login_form.name} не отображается!\n'
+                                                  f'Скриншот {self.attach_screenshot(self.login_form.name)}')
 
     def go_to_create_account_page(self):
         with allure.step('Перейти на страницу создания аккаунта'):
@@ -57,14 +57,14 @@ class LoginPage(HeaderPage):
             assert act_email_placeholder == exp_email_placeholder, \
                 (f'Некорректный плейсхолдер в {self.email_input.name}\n'
                  f'ОР: {exp_email_placeholder}\n'
-                 f'ФР: {act_email_placeholder}\n',
-                 self.attach_screenshot(self.email_input.name))
+                 f'ФР: {act_email_placeholder}\n'
+                 f'Скриншот {self.attach_screenshot(self.email_input.name)}')
 
             assert act_email_placeholder == exp_email_placeholder, \
                 (f'Некорректный плейсхолдер в {self.password_input.name}\n'
                  f'ОР: {exp_password_placeholder}\n'
-                 f'ФР: {act_password_placeholder}\n',
-                 self.attach_screenshot(self.password_input.name))
+                 f'ФР: {act_password_placeholder}\n'
+                 f'Скриншот {self.attach_screenshot(self.password_input.name)}')
 
     def error_alert_is_displayed(self, exp_alert):
         with allure.step(f'{self.alert.name} отображается'):
@@ -72,5 +72,5 @@ class LoginPage(HeaderPage):
 
             assert act_alert == exp_alert, (f'Некорректный {self.alert.name}\n'
                                             f'ОР: {exp_alert}\n'
-                                            f'ФР: {act_alert}\n',
-                                            self.attach_screenshot(self.alert.name))
+                                            f'ФР: {act_alert}\n'
+                                            f'Скриншот {self.attach_screenshot(self.alert.name)}')

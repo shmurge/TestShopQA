@@ -46,3 +46,5 @@ class BasePage:
             name=screenshot_name,
             attachment_type=AttachmentType.PNG
         )
+
+        return screenshot_name

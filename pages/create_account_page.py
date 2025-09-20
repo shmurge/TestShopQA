@@ -32,8 +32,8 @@ class CreateAccountPage(HeaderPage):
 
     def registration_form_is_displayed(self):
         with allure.step(f'{self.registration_form.name} отображается'):
-            assert self.registration_form.is_visible(), (f'{self.registration_form.name} не отображается!',
-                                                         self.attach_screenshot(self.registration_form.name))
+            assert self.registration_form.is_visible(), (f'{self.registration_form.name} не отображается!\n'
+                                                         f'Скриншот {self.attach_screenshot(self.registration_form.name)}')
 
     def fill_email(self, data, save_to_env=True):
         with allure.step(f'Заполнить {self.email_input.name}'):
@@ -85,16 +85,16 @@ class CreateAccountPage(HeaderPage):
 
             assert act == exp, (f'Некорректный имя {self.alert.name}\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}',
-                                self.attach_screenshot(self.alert.name))
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.alert.name)}')
 
     def check_placeholders_in_registration_form(self, exp):
         with allure.step(f'Проверить плэйсхолдер в {self.username_input.name}'):
             act = self.username_input.get_placeholder()
             assert act == exp, (f'Некорректный плейсхолдер в {self.username_input.name}\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}',
-                                self.attach_screenshot(self.username_input.name))
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.username_input.name)}')
 
     @staticmethod
     def set_env_key(key, value):

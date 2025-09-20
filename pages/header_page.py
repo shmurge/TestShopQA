@@ -16,7 +16,7 @@ class HeaderPage(BasePage):
         self.cart_button = Button(self.browser, 'Корзина', *HeaderPageLocators.LINK_CART)
         self.main_search_button = Button(self.browser, 'Главный поиск', *HeaderPageLocators.BUTTON_MAIN_SEARCH)
         self.sign_in_button = Button(self.browser, 'Войти', *HeaderPageLocators.LINK_SIGN_IN)
-        self.username = BaseElement(self.browser, 'Имя пользователя', *HeaderPageLocators.USERNAME)
+        self.username_in_header = BaseElement(self.browser, 'Имя пользователя', *HeaderPageLocators.USERNAME)
         self.my_account_button = Button(self.browser, 'Мой аккаунт', *HeaderPageLocators.MY_ACCOUNT_BUTTON)
         self.logout_button = Button(self.browser, 'Выйти', *HeaderPageLocators.LOGOUT_BUTTON)
 
@@ -37,24 +37,24 @@ class HeaderPage(BasePage):
             self.main_search_button.click()
 
     def username_is_correct(self, exp):
-        act = self.username.get_text_of_element()
-        with allure.step(f'{self.username.name} в хэдере соответствует'):
+        act = self.username_in_header.get_text_of_element()
+        with allure.step(f'{self.username_in_header.name} в хэдере корректное'):
             assert act == exp, (f'Некорректное имя пользователя в хэдере\n'
                                 f'ОР: {exp}\n'
-                                f'ФР: {act}',
-                                self.attach_screenshot(self.username.name))
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.username_in_header.name)}')
 
     def goto_my_account(self):
         with allure.step('Перейти в аккаунт'):
-            self.username.move_to_element()
+            self.username_in_header.move_to_element()
             self.my_account_button.click()
 
     def logout(self):
         with allure.step('Выход из аккаунта'):
-            self.username.move_to_element()
+            self.username_in_header.move_to_element()
             self.logout_button.click()
 
     def sign_in_button_is_displayed(self):
         with allure.step(f'{self.sign_in_button.name} отображается'):
-            assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!',
-                                                      self.attach_screenshot(self.sign_in_button.name))
+            assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!\n',
+                                                      f'Скриншот {self.attach_screenshot(self.sign_in_button.name)}')
