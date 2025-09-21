@@ -15,8 +15,15 @@ class AccountPage(HeaderPage):
     def __init__(self, browser):
         super().__init__(browser)
 
+        self.my_account_header = BaseElement(self.browser, 'Мой аккаунт', *AccountPageLocators.MY_ACCOUNT_HEADER)
         self.username_in_account = BaseElement(self.browser, 'Имя пользователя', *AccountPageLocators.USERNAME)
         self.user_email_in_account = BaseElement(self.browser, 'Email', *AccountPageLocators.USER_EMAIL)
+
+    def account_page_is_displayed(self):
+        with allure.step(f'Отображается {self.my_account_header.name}'):
+            assert self.my_account_header.is_visible(), (f'Станица аккаунта не отображается\n'
+                                                         f'Скриншот'
+                                                         f'{self.attach_screenshot(self.my_account_header.name)}')
 
     def user_information_is_correct(self, username, user_email):
         with allure.step('Информация о пользователе корректна'):

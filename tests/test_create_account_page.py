@@ -34,7 +34,8 @@ class TestCreateAccountPage(BaseTest):
         self.main_page.is_opened()
         self.main_page.main_page_is_displayed()
 
-    #@pytest.mark.order(1)
+    @pytest.mark.order(1)
+    @pytest.mark.test
     @allure.title('Создание аккаунта')
     def test_create_account(self):
         self.create_account_page.open()
@@ -57,7 +58,8 @@ class TestCreateAccountPage(BaseTest):
         self.create_account_page.fill_registration_form(
             email=UserData.LOGIN,
             username=InputData.USERNAME,
-            password=InputData.VALID_PASSWORD
+            password=InputData.VALID_PASSWORD,
+            save_to_env=False
         )
 
         self.create_account_page.error_alert_is_displayed(ErrorMessage.EMAIL_ALREADY_EXIST)
@@ -66,9 +68,9 @@ class TestCreateAccountPage(BaseTest):
     def test_create_account_with_different_passwords(self):
         self.create_account_page.open()
         self.create_account_page.is_opened()
-        self.create_account_page.fill_email(InputData.VALID_EMAIL)
-        self.create_account_page.fill_username(InputData.USERNAME)
-        self.create_account_page.fill_password(InputData.VALID_PASSWORD)
+        self.create_account_page.fill_email(InputData.VALID_EMAIL, save_to_env=False)
+        self.create_account_page.fill_username(InputData.USERNAME, save_to_env=False)
+        self.create_account_page.fill_password(InputData.VALID_PASSWORD, save_to_env=False)
         self.create_account_page.fill_password_confirm('qwe')
         self.create_account_page.click_sign_up()
 

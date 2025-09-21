@@ -40,6 +40,7 @@ class TestLoginPage(BaseTest):
             login=UserData.LOGIN,
             password=UserData.PASSWORD)
 
+        self.account_page.account_page_is_displayed()
         self.account_page.user_information_is_correct(
             username=UserData.USERNAME,
             user_email=UserData.LOGIN
