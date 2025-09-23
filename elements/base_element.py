@@ -69,8 +69,9 @@ class BaseElement:
 
         return element.text
 
-    def is_visible(self, element=None):
+    def is_visible(self, timeout=15, frequency=1, element=None):
         element = element if element else self.locator
+        self.wait = WebDriverWait(self.browser, timeout, frequency)
         try:
             self.wait.until(EC.visibility_of_element_located(element))
         except TimeoutException:
@@ -81,15 +82,26 @@ class BaseElement:
         element = element if element else self.locator
         self.wait = WebDriverWait(self.browser, timeout, frequency)
         try:
-            self.wait.until_not(EC.visibility_of_element_located(element))
+            self.wait.until(EC.invisibility_of_element_located(element))
         except TimeoutException:
             return False
         return True
+
+    # def is_not_visible(self, timeout=1, frequency=0.5, element=None):
+    #     element = element if element else self.locator
+    #     self.wait = WebDriverWait(self.browser, timeout, frequency)
+    #     try:
+    #         self.wait.until_not(EC.visibility_of_element_located(element))
+    #     except TimeoutException:
+    #         return False
+    #     return True
 
     def is_displayed(self, element=None):
         element = element if element else self.get_element()
 
         return element.is_displayed()
 
-    def get_attribute(self, attribute):
-        return self.get_element().get_attribute(attribute)
+    def get_attribute(self, attribute, element=None):
+        element = element if element else self.get_element()
+
+        return element.get_attribute(attribute)

@@ -14,6 +14,9 @@ class HeaderPage(BasePage):
 
         self.main_logo = BaseElement(self.browser, 'Лого', *HeaderPageLocators.MAIN_LOGO)
         self.cart_button = Button(self.browser, 'Корзина', *HeaderPageLocators.LINK_CART)
+        self.counter_on_cart = BaseElement(
+            self.browser, 'Кол-во товаров в корзине', *HeaderPageLocators.COUNTER_ON_CART
+        )
         self.main_search_button = Button(self.browser, 'Главный поиск', *HeaderPageLocators.BUTTON_MAIN_SEARCH)
         self.sign_in_button = Button(self.browser, 'Войти', *HeaderPageLocators.LINK_SIGN_IN)
         self.username_in_header = BaseElement(self.browser, 'Имя пользователя', *HeaderPageLocators.USERNAME)
@@ -58,3 +61,11 @@ class HeaderPage(BasePage):
         with allure.step(f'{self.sign_in_button.name} отображается'):
             assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!\n',
                                                       f'Скриншот {self.attach_screenshot(self.sign_in_button.name)}')
+
+    def check_prods_quantity_in_header(self, exp):
+        with allure.step('Проверить количество товаров в счетчике хэдера'):
+            act = int(self.counter_on_cart.get_text_of_element())
+
+            assert act == exp, (f'Некорректное количество товаров в счетчике хэдера!\n'
+                                f'ОР: {exp}\n'
+                                f'ФР: {act}')

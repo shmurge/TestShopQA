@@ -4,8 +4,9 @@ import pytest
 import allure
 
 from dotenv import load_dotenv
-from pages.login_page import LoginPage
 from pages.account_page import AccountPage
+from pages.login_page import LoginPage
+from pages.main_page import MainPage
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -76,3 +77,10 @@ def pre_login(browser):
         username=os.getenv('USERNAME'),
         user_email=os.getenv('LOGIN')
     )
+
+@pytest.fixture()
+def pre_goto_prod_page(browser):
+    page = MainPage(browser)
+    page.open()
+    page.is_opened()
+    page.select_random_product()

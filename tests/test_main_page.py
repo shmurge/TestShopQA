@@ -52,7 +52,7 @@ class TestMainPage(BaseTest):
         self.main_page.open()
         self.main_page.is_opened()
         title, price = self.main_page.select_random_product()
-        self.product_page.check_title_and_price(title, price)
+        self.product_page.check_title_and_price_in_prod_page(title, price)
 
     @allure.title('Поиск товара на главной странице')
     @pytest.mark.xfail

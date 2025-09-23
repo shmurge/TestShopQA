@@ -35,7 +35,6 @@ class TestCreateAccountPage(BaseTest):
         self.main_page.main_page_is_displayed()
 
     @pytest.mark.order(1)
-    @pytest.mark.test
     @allure.title('Создание аккаунта')
     def test_create_account(self):
         self.create_account_page.open()
