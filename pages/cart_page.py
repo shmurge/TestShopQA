@@ -39,20 +39,39 @@ class CartPage(HeaderPage):
                                                       f'ФР: {act}\n'
                                                       f'Скриншот {self.attach_screenshot(self.empty_cart_message.name)}')
 
-    def check_prod_title_and_price(self, exp_title, exp_price):
-        titles = [t.text for t in self.product_title.get_elements()]
-        prices = [p.text for p in self.product_price.get_elements()]
+    def check_prod_title_price_and_quantity(self, exp_title, exp_price, exp_quantity: int):
+        with allure.step('Проверить наличие товаров в корзине'):
+            titles = [t.text for t in self.product_title.get_elements()]
+            prices = [p.text for p in self.product_price.get_elements()]
+            quantities = [int(q.get_attribute('value')) for q in self.units_quantity_input.get_elements()]
 
-        assert exp_title in titles, (f'Товар {exp_title} не найден в корзине!\n'
-                                     f'Скриншот {self.attach_screenshot(exp_title)}')
+            self.product_is_on_order_overview(exp_title, titles)
 
-        for i in range(len(titles)):
-            if exp_title in titles[i]:
+            with allure.step('Проверить количество и стоимость товара'):
+                for i in range(len(titles)):
+                    if exp_title in titles[i]:
+                        assert prices[i] == exp_price, (f'Некорректная стоимость товара!\n'
+                                                        f'ОР: {exp_price}\n'
+                                                        f'ФР: {prices[i]}\n'
+                                                        f'Скриншот {self.attach_screenshot(exp_price)}')
 
-                assert prices[i] == exp_price, (f'Некорректная стоимость товара!\n'
-                                                f'ОР: {exp_price}\n'
-                                                f'ФР: {prices[i]}\n'
-                                                f'Скриншот {self.attach_screenshot(exp_price)}')
-##############################################
+                        assert quantities[i] == exp_quantity, f'Некорректное количество единиц товара!\n' \
+                                                              f'ОР: {exp_quantity}\n' \
+                                                              f'ФР: {quantities[i]}\n' \
+                                                              f'Скриншот {self.attach_screenshot(exp_title)}'
+
+    def product_is_on_order_overview(self, prod_title, prods_list: list):
+
+        with allure.step('Искомый товар найден в корзине'):
+            f = False
+
+            for t in prods_list:
+                if prod_title in t:
+                    f = True
+                    break
+
+            assert f is True, (f'Товар {prod_title} не найден в корзине!\n'
+                               f'Скриншот {self.attach_screenshot(prod_title)}')
+
     def get_product_quantity(self):
         pass

@@ -62,7 +62,7 @@ class HeaderPage(BasePage):
             assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!\n',
                                                       f'Скриншот {self.attach_screenshot(self.sign_in_button.name)}')
 
-    def check_prods_quantity_in_header(self, exp):
+    def check_prods_quantity_in_header(self, exp: int):
         with allure.step('Проверить количество товаров в счетчике хэдера'):
             act = int(self.counter_on_cart.get_text_of_element())
 

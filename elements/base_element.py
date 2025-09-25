@@ -67,7 +67,7 @@ class BaseElement:
     def get_text_of_element(self, element=None):
         element = element if element else self.get_element()
 
-        return element.text
+        return element.text.strip()
 
     def is_visible(self, timeout=15, frequency=1, element=None):
         element = element if element else self.locator

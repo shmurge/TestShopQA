@@ -1,3 +1,5 @@
+from decimal import Decimal, ROUND_HALF_UP
+
 import allure
 from time import sleep
 import random
@@ -20,12 +22,6 @@ class ProductPage(BasePage):
         )
         self.product_price_on_page = BaseElement(
             self.browser, 'Стоимость товара на странице', *ProductPageLocators.PRODUCT_PRICE
-        )
-        self.product_title_in_modal = BaseElement(
-            self.browser, 'Наименование товара в модалке', *AddToCartModal.PRODUCT_TITLE
-        )
-        self.product_price_in_modal = BaseElement(
-            self.browser, 'Стоимость товара в модалке', *AddToCartModal.PRODUCT_PRICE
         )
         self.add_to_cart_button = Button(
             self.browser, 'Добавить в корзину', *ProductPageLocators.ADD_TO_CART_BUTTON
@@ -58,12 +54,9 @@ class ProductPage(BasePage):
 
     def add_prod_to_cart_and_continue_shopping(self):
         with allure.step('Добавить товар в корзину'):
-            title, price = self.get_title_and_price_on_product_page()
             self.add_to_cart_button.click()
             if self.add_to_cart_modal.is_visible(timeout=2, frequency=0.5):
                 self.continue_shopping_button.click()
-
-        return title, price
 
     def add_to_cart_modal_is_displayed(self):
         with allure.step(f'Отображается {self.add_to_cart_modal.name}'):
@@ -81,14 +74,6 @@ class ProductPage(BasePage):
                     self.units_quantity_input.locator, 'value', str(count))
                 )
 
-    def check_value_in_unit_quantity_input(self, exp):
-        with allure.step('Проверить значение в инпуте счетчика единиц товара'):
-            act = int(self.units_quantity_input.get_attribute('value'))
-
-            assert act == exp, (f'Некорректное значение в счетчике единиц!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(exp)}')
 
     def check_title_and_price_in_prod_page(self, exp_title, exp_price):
         with allure.step('Проверить наименование и стоимость товара на странице товара'):
@@ -104,42 +89,73 @@ class ProductPage(BasePage):
                                             f'ФР: {act_price}\n'
                                             f'Скриншот {self.attach_screenshot(self.product_price_on_page.name)}')
 
-    def check_title_and_price_in_modal(self, exp_title, exp_price):
-        with allure.step('Проверить наименование товара и стоимость в модалке'):
-            act_title, act_price = self.get_title_and_price_in_modal()
-
-            assert act_title == exp_title, (f'Некорректное наименование товара\n'
-                                            f'ОР: {exp_title}\n'
-                                            f'ФР: {act_title}\n'
-                                            f'Скриншот {self.attach_screenshot(self.product_title_in_modal.name)}')
-
-            assert act_title == exp_title, (f'Некорректная стоимость товара\n'
-                                            f'ОР: {exp_price}\n'
-                                            f'ФР: {act_price}\n'
-                                            f'Скриншот {self.attach_screenshot(self.product_price_in_modal.name)}')
+    # def check_title_and_price_in_modal(self, exp_title, exp_price):
+    #     with allure.step('Проверить наименование товара и стоимость в модалке'):
+    #         act_title, act_price = self.get_title_and_price_in_modal()
+    #
+    #         assert act_title == exp_title, (f'Некорректное наименование товара\n'
+    #                                         f'ОР: {exp_title}\n'
+    #                                         f'ФР: {act_title}\n'
+    #                                         f'Скриншот {self.attach_screenshot(self.product_title_in_modal.name)}')
+    #
+    #         assert act_title == exp_title, (f'Некорректная стоимость товара\n'
+    #                                         f'ОР: {exp_price}\n'
+    #                                         f'ФР: {act_price}\n'
+    #                                         f'Скриншот {self.attach_screenshot(self.product_price_in_modal.name)}')
 
     def click_on_continue_shopping(self):
         with allure.step('Продолжить покупки'):
             self.continue_shopping_button.click()
 
+    def cost_calculation(self, price):
+        quantity = self.get_prod_units_quantity_on_product_page()
+        price = price.replace(',', '')
+
+        start_index = price.find(' ') + 1
+        new_price = float(price[start_index:]) * quantity
+        price = self.format_number(new_price)
+
+        return price
+
+    def get_primary_info_about_product_on_product_page(self):
+        with allure.step('Получить основную информацию о товаре'):
+            title, price = self.get_title_and_price_on_product_page()
+            quantity = self.get_prod_units_quantity_on_product_page()
+
+        return title, price, quantity
+
     def get_title_and_price_on_product_page(self):
         title = self.product_title_on_page.get_text_of_element()
         price = self.product_price_on_page.get_text_of_element()
+        price = self.cost_calculation(price=price)
 
         return title, price
 
-    def get_title_and_price_in_modal(self):
-        title = self.product_title_in_modal.get_text_of_element()
-        price = self.product_price_in_modal.get_text_of_element()
+    def get_prod_units_quantity_on_product_page(self):
+        return int(self.units_quantity_input.get_attribute('value'))
 
-        return title, price
+    def get_prod_description(self):
+        return self.product_description.get_text_of_element()
 
-    def get_info_about_product(self):
-        title, price = self.get_title_and_price_on_product_page()
+    # def get_title_and_price_in_modal(self):
+    #     title = self.product_title_in_modal.get_text_of_element()
+    #     price = self.product_price_in_modal.get_text_of_element()
+    #
+    #     return title, price
+
+    def get_additional_info_about_product_on_product_page(self):
         material = self.select_product_material()
         color = self.select_product_color()
 
-        return title, price, material, color
+        return material, color
+
+    @staticmethod
+    def format_number(value):
+        # Форматирует число в строку вида $ x,xxx,xxx.xx
+        d = Decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        s = f"$ {d:,.2f}"
+
+        return s
 
     def select_product_material(self):
         if self.radio_button_material.is_visible(timeout=2, frequency=0.5):
