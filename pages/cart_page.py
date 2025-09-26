@@ -50,15 +50,8 @@ class CartPage(HeaderPage):
             with allure.step('Проверить количество и стоимость товара'):
                 for i in range(len(titles)):
                     if exp_title in titles[i]:
-                        assert prices[i] == exp_price, (f'Некорректная стоимость товара!\n'
-                                                        f'ОР: {exp_price}\n'
-                                                        f'ФР: {prices[i]}\n'
-                                                        f'Скриншот {self.attach_screenshot(exp_price)}')
-
-                        assert quantities[i] == exp_quantity, f'Некорректное количество единиц товара!\n' \
-                                                              f'ОР: {exp_quantity}\n' \
-                                                              f'ФР: {quantities[i]}\n' \
-                                                              f'Скриншот {self.attach_screenshot(exp_title)}'
+                        self.check_product_quantity(quantities[i], exp_quantity)
+                        self.check_product_price(prices[i], exp_price)
 
     def product_is_on_order_overview(self, prod_title, prods_list: list):
 
@@ -73,5 +66,16 @@ class CartPage(HeaderPage):
             assert f is True, (f'Товар {prod_title} не найден в корзине!\n'
                                f'Скриншот {self.attach_screenshot(prod_title)}')
 
-    def get_product_quantity(self):
-        pass
+    def check_product_quantity(self, act_quan, exp_quan):
+        with allure.step('Проверить количество единиц товара'):
+            assert exp_quan == act_quan, f'Некорректное количество единиц товара!\n' \
+                                         f'ОР: {exp_quan}\n' \
+                                         f'ФР: {act_quan}\n' \
+                                         f'Скриншот {self.attach_screenshot(exp_quan)}'
+
+    def check_product_price(self, act_price, exp_price):
+        with allure.step('Проверить стоимость товара'):
+            assert exp_price == act_price, f'Некорректная стоимость товара!\n' \
+                                           f'ОР: {exp_price}\n' \
+                                           f'ФР: {act_price}\n' \
+                                           f'Скриншот {self.attach_screenshot(exp_price)}'
