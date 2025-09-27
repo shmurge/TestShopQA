@@ -13,13 +13,15 @@ class BasePage:
         self.browser = browser
         self.wait = WebDriverWait(browser, timeout=15, poll_frequency=1)
 
-    def open(self):
-        with allure.step(f'Открыть страницу: {self.PAGE_URL}'):
-            self.browser.get(self.PAGE_URL)
+    def open(self, page_url=None):
+        page_url = page_url if page_url else self.PAGE_URL
+        with allure.step(f'Открыть страницу: {page_url}'):
+            self.browser.get(page_url)
 
-    def is_opened(self):
-        with allure.step(f'Страница {self.PAGE_URL} открыта'):
-            self.wait.until(EC.url_to_be(self.PAGE_URL))
+    def is_opened(self, page_url=None):
+        page_url = page_url if page_url else self.PAGE_URL
+        with allure.step(f'Страница {page_url} открыта'):
+            self.wait.until(EC.url_to_be(page_url))
 
     def open_link_in_new_tab(self, element):
         with allure.step('Открыть в новой вкладке'):

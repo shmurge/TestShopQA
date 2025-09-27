@@ -6,8 +6,10 @@ import random
 
 from elements.base_element import BaseElement
 from elements.button import Button
+from config.links import Links
 from elements.input import Input
-from locators.locs_product_page import ProductPageLocators, AddToCartModal
+from locators.locs_modal_add_to_cart import ModalAddToCartLocators
+from locators.locs_product_page import ProductPageLocators
 from pages.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -34,22 +36,22 @@ class ProductPage(BasePage):
             self.browser, 'Краткое описание товара', *ProductPageLocators.PRODUCT_DESCRIPTION
         )
         self.add_one_unit_button = Button(
-            self.browser, 'Добавить одну единицу товара', *ProductPageLocators.ADD_ONE_BUTTON
+            self.browser, 'Добавить одну единицу товара на странице', *ProductPageLocators.ADD_ONE_BUTTON
         )
         self.remove_one_unit_button = Button(
-            self.browser, 'Удалить одну единицу товара', *ProductPageLocators.REMOVE_ONE_BUTTON
+            self.browser, 'Удалить одну единицу товара на странице', *ProductPageLocators.REMOVE_ONE_BUTTON
         )
         self.units_quantity_input = Input(
-            self.browser, 'Счетчик единиц товара', *ProductPageLocators.QUANTITY_INPUT
+            self.browser, 'Счетчик единиц товара на странице', *ProductPageLocators.QUANTITY_INPUT
         )
         self.add_to_cart_modal = BaseElement(
-            self.browser, 'Модалка "Добавить в корзину"', *AddToCartModal.ADD_TO_CART_MODAL
+            self.browser, 'Модалка "Добавить в корзину"', *ModalAddToCartLocators.ADD_TO_CART_MODAL
         )
         self.proceed_to_checkout_button = Button(
-            self.browser, 'Перейти к оформлению', *AddToCartModal.PROCEED_TO_CHECKOUT_BUTTON
+            self.browser, 'Перейти к оформлению', *ModalAddToCartLocators.PROCEED_TO_CHECKOUT_BUTTON
         )
         self.continue_shopping_button = Button(
-            self.browser, 'Продолжить покупки', *AddToCartModal.CONTINUE_SHOPPING_BUTTON
+            self.browser, 'Продолжить покупки', *ModalAddToCartLocators.CONTINUE_SHOPPING_BUTTON
         )
 
     def add_prod_to_cart_and_continue_shopping(self):
@@ -74,7 +76,6 @@ class ProductPage(BasePage):
                     self.units_quantity_input.locator, 'value', str(count))
                 )
 
-
     def check_title_and_price_in_prod_page(self, exp_title, exp_price):
         with allure.step('Проверить наименование и стоимость товара на странице товара'):
             act_title, act_price = self.get_title_and_price_on_product_page()
@@ -89,19 +90,13 @@ class ProductPage(BasePage):
                                             f'ФР: {act_price}\n'
                                             f'Скриншот {self.attach_screenshot(self.product_price_on_page.name)}')
 
-    # def check_title_and_price_in_modal(self, exp_title, exp_price):
-    #     with allure.step('Проверить наименование товара и стоимость в модалке'):
-    #         act_title, act_price = self.get_title_and_price_in_modal()
-    #
-    #         assert act_title == exp_title, (f'Некорректное наименование товара\n'
-    #                                         f'ОР: {exp_title}\n'
-    #                                         f'ФР: {act_title}\n'
-    #                                         f'Скриншот {self.attach_screenshot(self.product_title_in_modal.name)}')
-    #
-    #         assert act_title == exp_title, (f'Некорректная стоимость товара\n'
-    #                                         f'ОР: {exp_price}\n'
-    #                                         f'ФР: {act_price}\n'
-    #                                         f'Скриншот {self.attach_screenshot(self.product_price_in_modal.name)}')
+    def open_modal_add_to_cart(self):
+        with allure.step(f'Открыть {self.add_to_cart_modal.name}'):
+            self.add_to_cart_button.click()
+        with allure.step(f'Отображается {self.add_to_cart_modal.name}'):
+            assert self.add_to_cart_modal.is_visible(), (f'{self.add_to_cart_modal.name} не отображается!\n'
+                                                         f'Скриншот '
+                                                         f'{self.attach_screenshot(self.add_to_cart_modal.name)}')
 
     def click_on_continue_shopping(self):
         with allure.step('Продолжить покупки'):
@@ -124,10 +119,12 @@ class ProductPage(BasePage):
 
         return title, price, quantity
 
-    def get_title_and_price_on_product_page(self):
+    def get_title_and_price_on_product_page(self, cost_calculation=True):
         title = self.product_title_on_page.get_text_of_element()
         price = self.product_price_on_page.get_text_of_element()
-        price = self.cost_calculation(price=price)
+
+        if cost_calculation:
+            price = self.cost_calculation(price=price)
 
         return title, price
 
@@ -136,12 +133,6 @@ class ProductPage(BasePage):
 
     def get_prod_description(self):
         return self.product_description.get_text_of_element()
-
-    # def get_title_and_price_in_modal(self):
-    #     title = self.product_title_in_modal.get_text_of_element()
-    #     price = self.product_price_in_modal.get_text_of_element()
-    #
-    #     return title, price
 
     def get_additional_info_about_product_on_product_page(self):
         material = self.select_product_material()

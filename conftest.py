@@ -2,8 +2,9 @@ import os
 
 import pytest
 import allure
-
 from dotenv import load_dotenv
+
+from config.links import Links
 from pages.account_page import AccountPage
 from pages.login_page import LoginPage
 from pages.main_page import MainPage
@@ -78,9 +79,17 @@ def pre_login(browser):
         user_email=os.getenv('LOGIN')
     )
 
+
 @pytest.fixture()
 def pre_goto_prod_page(browser):
     page = MainPage(browser)
     page.open()
     page.is_opened()
     page.select_random_product()
+
+
+@pytest.fixture()
+def pre_go_to_customize_desk_page(browser):
+    page = MainPage(browser)
+    page.open(Links.CUSTOMIZE_DESK_PAGE)
+
