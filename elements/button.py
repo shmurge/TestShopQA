@@ -9,4 +9,3 @@ class Button(BaseElement):
         super().__init__(browser, name, how, what)
 
         self.name = f'Кнопка: {name}'
-

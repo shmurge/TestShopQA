@@ -31,7 +31,19 @@ class ProductPage(BasePage):
         self.radio_button_material = Button(
             self.browser, 'Выбрать материал', *ProductPageLocators.RADIO_BUTTON_MATERIAL
         )
+        self.material_steel_button = Button(
+            self.browser, 'Стальной', *ProductPageLocators.RADIO_BUTTON_STEEL
+        )
+        self.material_alum_button = Button(
+            self.browser, 'Алюминиевый', *ProductPageLocators.RADIO_BUTTON_ALUMINIUM
+        )
+        self.material_custom_button = Button(
+            self.browser, 'Кастом', *ProductPageLocators.RADIO_BUTTON_CUSTOM
+        )
+        self.input_custom = Input(self.browser, 'Кастом', *ProductPageLocators.INPUT_CUSTOM)
         self.radio_button_color = Button(self.browser, 'Выбрать цвет', *ProductPageLocators.RADIO_BUTTON_COLOR)
+        self.black_color_button = Button(self.browser, 'Черный цвет', *ProductPageLocators.RADIO_BUTTON_BLACK)
+        self.white_color_button = Button(self.browser, 'Белый цвет', *ProductPageLocators.RADIO_BUTTON_WHITE)
         self.product_description = BaseElement(
             self.browser, 'Краткое описание товара', *ProductPageLocators.PRODUCT_DESCRIPTION
         )
@@ -53,11 +65,24 @@ class ProductPage(BasePage):
         self.continue_shopping_button = Button(
             self.browser, 'Продолжить покупки', *ModalAddToCartLocators.CONTINUE_SHOPPING_BUTTON
         )
+        self.desk_alum_white_photo = BaseElement(
+            self.browser, 'Стол: алюминий/белый', *ProductPageLocators.CUSTOMIZE_DESK_PHOTO_ALUM_WHITE
+        )
+        self.desk_steel_black_photo = BaseElement(
+            self.browser, 'Стол: сталь/черный', *ProductPageLocators.CUSTOMIZE_DESK_PHOTO_STEEL_BLACK
+        )
+        self.desk_steel_white_photo = BaseElement(
+            self.browser, 'Стол: сталь/белый', *ProductPageLocators.CUSTOMIZE_DESK_PHOTO_STEEL_WHITE
+        )
+        self.product_photos_in_modal = BaseElement(
+            self.browser, 'Фото товаров в модалке', *ModalAddToCartLocators.PRODUCT_PHOTOS_IN_MODAL
+        )
 
     def add_prod_to_cart_and_continue_shopping(self):
         with allure.step('Добавить товар в корзину'):
             self.add_to_cart_button.click()
             if self.add_to_cart_modal.is_visible(timeout=2, frequency=0.5):
+                self.wait.until(EC.visibility_of_all_elements_located(self.product_photos_in_modal.locator))
                 self.continue_shopping_button.click()
 
     def add_to_cart_modal_is_displayed(self):
@@ -77,18 +102,50 @@ class ProductPage(BasePage):
                 )
 
     def check_title_and_price_in_prod_page(self, exp_title, exp_price):
-        with allure.step('Проверить наименование и стоимость товара на странице товара'):
-            act_title, act_price = self.get_title_and_price_on_product_page()
+        with (allure.step('Проверить наименование и стоимость товара на странице товара')):
+            act_title = self.get_prod_title_on_page()
+            act_price = self.get_prod_price_on_page()
 
             assert act_title == exp_title, (f'Некорректное наименование товара\n'
                                             f'ОР: {exp_title}\n'
                                             f'ФР: {act_title}\n'
                                             f'Скриншот {self.attach_screenshot(self.product_title_on_page.name)}')
 
-            assert act_title == exp_title, (f'Некорректная стоимость товара\n'
+            assert act_price == exp_price, (f'Некорректная стоимость товара\n'
                                             f'ОР: {exp_price}\n'
                                             f'ФР: {act_price}\n'
                                             f'Скриншот {self.attach_screenshot(self.product_price_on_page.name)}')
+
+    def check_product_description_on_page(self, exp):
+        with allure.step(f'Проверить {self.product_description.name}'):
+            act = self.product_description.get_text_of_element()
+            assert exp == act, (f'Некорректное описание товара на странице!\n'
+                                f'ОР: {exp}\n'
+                                f'ФР: {act}\n'
+                                f'Скриншот {self.attach_screenshot(self.product_description.name)}')
+
+    def choose_color_on_page(self, color: str):
+        with allure.step(f'Выбрать цвет: {color}'):
+            self.desk_alum_white_photo.is_present()
+            if color.lower() == 'black':
+                self.black_color_button.click()
+                self.desk_steel_black_photo.is_visible()
+            else:
+                self.white_color_button.click()
+                self.desk_steel_white_photo.is_visible()
+
+    def choose_material_on_page(self, material: str):
+        with allure.step(f'Выбрать материал: {material}'):
+            self.desk_alum_white_photo.is_present()
+            if material == 'aluminium':
+                self.material_alum_button.click()
+                self.desk_alum_white_photo.is_visible()
+            elif material == 'custom':
+                self.material_custom_button.click()
+                self.input_custom.is_visible()
+            else:
+                self.material_steel_button.click()
+                self.desk_steel_white_photo.is_visible()
 
     def open_modal_add_to_cart(self):
         with allure.step(f'Открыть {self.add_to_cart_modal.name}'):
@@ -112,33 +169,35 @@ class ProductPage(BasePage):
 
         return price
 
-    def get_primary_info_about_product_on_product_page(self):
+    def get_primary_info_about_product_on_product_page(self, cost_calculation=True):
         with allure.step('Получить основную информацию о товаре'):
-            title, price = self.get_title_and_price_on_product_page()
+            title = self.get_prod_title_on_page()
+            price = self.get_prod_price_on_page(cost_calculation=cost_calculation)
             quantity = self.get_prod_units_quantity_on_product_page()
 
         return title, price, quantity
-
-    def get_title_and_price_on_product_page(self, cost_calculation=True):
-        title = self.product_title_on_page.get_text_of_element()
-        price = self.product_price_on_page.get_text_of_element()
-
-        if cost_calculation:
-            price = self.cost_calculation(price=price)
-
-        return title, price
-
-    def get_prod_units_quantity_on_product_page(self):
-        return int(self.units_quantity_input.get_attribute('value'))
-
-    def get_prod_description(self):
-        return self.product_description.get_text_of_element()
 
     def get_additional_info_about_product_on_product_page(self):
         material = self.select_product_material()
         color = self.select_product_color()
 
         return material, color
+
+    def get_prod_title_on_page(self):
+        return self.product_title_on_page.get_text_of_element()
+
+    def get_prod_price_on_page(self, cost_calculation=True):
+        price = self.product_price_on_page.get_text_of_element()
+        if cost_calculation:
+            price = self.cost_calculation(price=price)
+
+        return price
+
+    def get_prod_units_quantity_on_product_page(self):
+        return int(self.units_quantity_input.get_attribute('value'))
+
+    def get_prod_description(self):
+        return self.product_description.get_text_of_element()
 
     @staticmethod
     def format_number(value):

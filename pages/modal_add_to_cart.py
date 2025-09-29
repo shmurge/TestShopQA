@@ -60,13 +60,19 @@ class ModalAddToCart(BasePage):
             self.check_product_price(exp_price)
             self.check_product_units_quantity(exp_quan)
 
-    def check_product_title(self, exp):
+    def check_product_title(self, exp, full_match=False):
         with allure.step(f'Проверить {self.product_title_on_modal.name}'):
             act = self.product_title_on_modal.get_text_of_element()
-            assert exp in act, (f'Некорректное {self.product_title_on_modal.name}!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.product_title_on_modal.name)}')
+            if full_match:
+                assert exp == act, (f'Некорректное {self.product_title_on_modal.name}!\n'
+                                    f'ОР: {exp}\n'
+                                    f'ФР: {act}\n'
+                                    f'Скриншот {self.attach_screenshot(self.product_title_on_modal.name)}')
+            else:
+                assert exp in act, (f'Некорректное {self.product_title_on_modal.name}!\n'
+                                    f'ОР: {exp}\n'
+                                    f'ФР: {act}\n'
+                                    f'Скриншот {self.attach_screenshot(self.product_title_on_modal.name)}')
 
     def check_product_price(self, exp):
         with allure.step(f'Проверить {self.product_price_on_modal.name}'):

@@ -34,12 +34,11 @@ class Input(BaseElement):
         return data
 
     def fill_autocomplete_input(self, data):
-        action = AC(self.browser)
         input_1 = self.get_element()
         self.wait.until(EC.element_to_be_clickable(self.locator))
-        action.click(input_1)
-        action.send_keys_to_element(input_1, data)
-        action.send_keys_to_element(input_1, Keys.ENTER).perform()
+        self.action.click(input_1)
+        self.action.send_keys_to_element(input_1, data)
+        self.action.send_keys_to_element(input_1, Keys.ENTER).perform()
 
         return data
 
@@ -47,8 +46,7 @@ class Input(BaseElement):
         return self.get_element().get_attribute('placeholder').strip()
 
     def press_enter(self):
-        action = AC(self.browser)
         input_1 = self.get_element()
 
         self.wait.until(EC.element_to_be_clickable(self.locator))
-        action.send_keys_to_element(input_1, Keys.ENTER).perform()
+        self.action.send_keys_to_element(input_1, Keys.ENTER).perform()

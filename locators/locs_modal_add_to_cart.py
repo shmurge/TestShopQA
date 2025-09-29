@@ -11,3 +11,5 @@ class ModalAddToCartLocators:
 
     CONTINUE_SHOPPING_BUTTON = ('xpath', '//*[@class="btn btn-secondary"]')
     PROCEED_TO_CHECKOUT_BUTTON = ('xpath', '//*[contains(@class, "btn btn-primary o_sa")]')
+
+    PRODUCT_PHOTOS_IN_MODAL = ('css selector', '[alt="Product Image"]')

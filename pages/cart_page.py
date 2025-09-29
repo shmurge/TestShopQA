@@ -39,13 +39,13 @@ class CartPage(HeaderPage):
                                                       f'ФР: {act}\n'
                                                       f'Скриншот {self.attach_screenshot(self.empty_cart_message.name)}')
 
-    def check_prod_title_price_and_quantity(self, exp_title, exp_price, exp_quantity: int):
+    def check_prod_title_price_and_quantity(self, exp_title, exp_price, exp_quantity: int, full_match=False):
         with allure.step('Проверить наличие товаров в корзине'):
             titles = [t.text for t in self.product_title.get_elements()]
             prices = [p.text for p in self.product_price.get_elements()]
             quantities = [int(q.get_attribute('value')) for q in self.units_quantity_input.get_elements()]
 
-            self.product_is_on_order_overview(exp_title, titles)
+            self.product_is_on_order_overview(exp_title, titles, full_match)
 
             with allure.step('Проверить количество и стоимость товара'):
                 for i in range(len(titles)):
@@ -53,18 +53,21 @@ class CartPage(HeaderPage):
                         self.check_product_quantity(quantities[i], exp_quantity)
                         self.check_product_price(prices[i], exp_price)
 
-    def product_is_on_order_overview(self, prod_title, prods_list: list):
-
-        with allure.step('Искомый товар найден в корзине'):
+    def product_is_on_order_overview(self, prod_title, prods_list: list, full_match=False):
+        with (allure.step('Искомый товар найден в корзине')):
             f = False
 
-            for t in prods_list:
-                if prod_title in t:
-                    f = True
-                    break
+            if full_match:
+                assert prod_title in prods_list, (f'Товар {prod_title} не найден в корзине!\n'
+                                                  f'Скриншот {self.attach_screenshot(prod_title)}')
+            else:
+                for t in prods_list:
+                    if prod_title in t:
+                        f = True
+                        break
 
-            assert f is True, (f'Товар {prod_title} не найден в корзине!\n'
-                               f'Скриншот {self.attach_screenshot(prod_title)}')
+                assert f is True, (f'Товар {prod_title} не найден в корзине!\n'
+                                   f'Скриншот {self.attach_screenshot(prod_title)}')
 
     def check_product_quantity(self, act_quan, exp_quan):
         with allure.step('Проверить количество единиц товара'):

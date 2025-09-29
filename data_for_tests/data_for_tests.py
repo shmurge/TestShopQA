@@ -22,7 +22,8 @@ class InputData:
 class InfoMessage:
     CART_IS_EMPTY = 'Your cart is empty!'
 
-    def message_no_results(self, query):
+    @staticmethod
+    def message_no_results(query):
         return f'No results\nNo results for "{query}".'
 
 
@@ -39,3 +40,15 @@ class PlaceHolder:
     LOGIN_FORM_PASSWORD_INPUT = 'Password'
 
     MAIN_PAGE_SEARCH_INPUT = 'Search...'
+
+
+class ProductInfo:
+    CUSTOMIZE_DESK_SHORT_TITLE = 'Customizable Desk'
+    T_CUSTOMIZE_DESK_STEEL_WHITE = 'Customizable Desk (Steel, White)'
+    T_CUSTOMIZE_DESK_STEEL_BLACK = 'Customizable Desk (Steel, Black)'
+    T_CUSTOMIZE_DESK_ALUM_WHITE = 'Customizable Desk (Aluminium, White)'
+    T_CUSTOMIZE_DESK_CUSTOM_WHITE = 'Customizable Desk (Custom, White)'
+    T_CUSTOMIZE_DESK_CUSTOM_BLACK = 'Customizable Desk (Custom, Black)'
+    DESCRIPTION_CUSTOMIZE_DESK = '160x80cm, with large legs.'
+    CUSTOMIZE_DESC_DEFAULT_PRICE = '$ 750.00'
+    CUSTOMIZE_DESC_ALUMINIUM_PRICE = '$ 800.40'

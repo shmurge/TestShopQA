@@ -1,3 +1,4 @@
+from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains as AC
 from selenium.webdriver.support import expected_conditions as EC
@@ -13,6 +14,7 @@ class BaseElement:
         self.name = name
         self.locator = how, what
         self.wait = WebDriverWait(browser, timeout=15, poll_frequency=1)
+        self.action = ActionChains(browser)
 
     def get_element(self):
         try:
@@ -45,8 +47,7 @@ class BaseElement:
     def double_click(self, element=None):
         element = element if element else self.get_element()
         self.wait.until(EC.element_to_be_clickable(element))
-        action = AC(self.browser)
-        action.double_click(element).perform()
+        self.action.double_click(element).perform()
 
     def submit(self, element=None):
         element = element if element else self.get_element()
@@ -60,9 +61,8 @@ class BaseElement:
 
     def move_to_element(self, element=None):
         element = element if element else self.get_element()
-        action = AC(self.browser)
-        action.move_to_element(element)
-        action.perform()
+        self.action.move_to_element(element)
+        self.action.perform()
 
     def get_text_of_element(self, element=None):
         element = element if element else self.get_element()
@@ -87,19 +87,24 @@ class BaseElement:
             return False
         return True
 
-    # def is_not_visible(self, timeout=1, frequency=0.5, element=None):
-    #     element = element if element else self.locator
-    #     self.wait = WebDriverWait(self.browser, timeout, frequency)
-    #     try:
-    #         self.wait.until_not(EC.visibility_of_element_located(element))
-    #     except TimeoutException:
-    #         return False
-    #     return True
+    def is_present(self, timeout=15, frequency=1, element=None):
+        element = element if element else self.locator
+        self.wait = WebDriverWait(self.browser, timeout, frequency)
+        try:
+            self.wait.until(EC.presence_of_element_located(element))
+        except TimeoutException:
+            return False
+        return True
 
     def is_displayed(self, element=None):
         element = element if element else self.get_element()
 
         return element.is_displayed()
+
+    def is_selected(self, element=None):
+        element = element if element else self.get_element()
+
+        return element.is_selected()
 
     def get_attribute(self, attribute, element=None):
         element = element if element else self.get_element()
