@@ -62,41 +62,49 @@ class ModalAddToCart(BasePage):
 
     def check_product_title(self, exp, full_match=False):
         with allure.step(f'Проверить {self.product_title_on_modal.name}'):
-            act = self.product_title_on_modal.get_text_of_element()
+            title_in_modal = self.product_title_on_modal.get_text_of_element()
             if full_match:
-                assert exp == act, (f'Некорректное {self.product_title_on_modal.name}!\n'
-                                    f'ОР: {exp}\n'
-                                    f'ФР: {act}\n'
-                                    f'Скриншот {self.attach_screenshot(self.product_title_on_modal.name)}')
+                self.assert_data_equal_data(
+                    act_res=title_in_modal,
+                    exp_res=exp,
+                    message=f'Некорректное {self.product_title_on_modal.name}'
+                )
             else:
-                assert exp in act, (f'Некорректное {self.product_title_on_modal.name}!\n'
-                                    f'ОР: {exp}\n'
-                                    f'ФР: {act}\n'
-                                    f'Скриншот {self.attach_screenshot(self.product_title_on_modal.name)}')
+                self.assert_data_in_data(
+                    act_res=exp,
+                    exp_res=title_in_modal,
+                    message=f'{self.product_title_on_modal} не содержит {exp}'
+                )
 
     def check_product_price(self, exp):
         with allure.step(f'Проверить {self.product_price_on_modal.name}'):
             act = self.product_price_on_modal.get_text_of_element()
-            assert exp == act, (f'Некорректная {self.product_price_on_modal.name}!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.product_price_on_modal.name)}')
+
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректная {self.product_price_on_modal.name}'
+            )
 
     def check_product_units_quantity(self, exp: int):
         with allure.step('Проверить количество единиц товара'):
             act = self.get_prod_units_quantity_on_modal()
-            assert exp == act, (f'Некорректное количество единиц товара!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot("К-во единиц товара")}')
+
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message='Некорректное количество единиц товара'
+            )
 
     def check_product_total_price(self, exp):
         with allure.step(f'Проверить {self.product_total_price_on_modal.name}'):
             act = self.product_total_price_on_modal.get_text_of_element()
-            assert exp == act, (f'Некорректная {self.product_total_price_on_modal.name}!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.product_price_on_modal.name)}')
+
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректная {self.product_total_price_on_modal.name}'
+            )
 
     def get_prod_units_quantity_on_modal(self):
         return int(self.units_quantity_input.get_attribute('value'))

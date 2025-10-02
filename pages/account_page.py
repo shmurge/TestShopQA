@@ -21,9 +21,11 @@ class AccountPage(HeaderPage):
 
     def account_page_is_displayed(self):
         with allure.step(f'Отображается {self.my_account_header.name}'):
-            assert self.my_account_header.is_visible(), (f'Станица аккаунта не отображается\n'
-                                                         f'Скриншот'
-                                                         f'{self.attach_screenshot(self.my_account_header.name)}')
+            self.assert_data_equal_data(
+                act_res=self.my_account_header.is_visible(),
+                exp_res=True,
+                message='Станица аккаунта не отображается'
+            )
 
     def user_information_is_correct(self, username, user_email):
         with allure.step('Информация о пользователе корректна'):
@@ -34,16 +36,18 @@ class AccountPage(HeaderPage):
         with allure.step(f'{self.username_in_account.name} в профиле корректное'):
             act = self.username_in_account.get_text_of_element()
 
-            assert act == exp, (f'Некорректное имя пользователя в профиле\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.username_in_account.name)}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message='Некорректное имя пользователя в профиле'
+            )
 
     def check_user_email(self, exp):
         with allure.step(f'{self.user_email_in_account.name} в профиле корректный'):
             act = self.user_email_in_account.get_text_of_element()
 
-            assert act == exp, (f'Некорректный Email в профиле\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.user_email_in_account.name)}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message='Некорректный Email в профил'
+            )

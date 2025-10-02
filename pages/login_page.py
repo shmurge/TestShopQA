@@ -55,23 +55,23 @@ class LoginPage(HeaderPage):
             act_email_placeholder = self.email_input.get_placeholder()
             act_password_placeholder = self.password_input.get_placeholder()
 
-            assert act_email_placeholder == exp_email_placeholder, \
-                (f'Некорректный плейсхолдер в {self.email_input.name}\n'
-                 f'ОР: {exp_email_placeholder}\n'
-                 f'ФР: {act_email_placeholder}\n'
-                 f'Скриншот {self.attach_screenshot(self.email_input.name)}')
-
-            assert act_email_placeholder == exp_email_placeholder, \
-                (f'Некорректный плейсхолдер в {self.password_input.name}\n'
-                 f'ОР: {exp_password_placeholder}\n'
-                 f'ФР: {act_password_placeholder}\n'
-                 f'Скриншот {self.attach_screenshot(self.password_input.name)}')
+            self.assert_data_equal_data(
+                act_res=act_email_placeholder,
+                exp_res=exp_email_placeholder,
+                message=f'Некорректный плейсхолдер в {self.email_input.name}'
+            )
+            self.assert_data_equal_data(
+                act_res=act_password_placeholder,
+                exp_res=exp_password_placeholder,
+                message=f'Некорректный плейсхолдер в {self.password_input.name}'
+            )
 
     def error_alert_is_displayed(self, exp_alert):
         with allure.step(f'{self.alert.name} отображается'):
             act_alert = self.alert.get_text_of_element()
 
-            assert act_alert == exp_alert, (f'Некорректный {self.alert.name}\n'
-                                            f'ОР: {exp_alert}\n'
-                                            f'ФР: {act_alert}\n'
-                                            f'Скриншот {self.attach_screenshot(self.alert.name)}')
+            self.assert_data_equal_data(
+                act_res=act_alert,
+                exp_res=exp_alert,
+                message=f'Некорректный {self.alert.name}'
+            )

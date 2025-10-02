@@ -102,27 +102,30 @@ class ProductPage(BasePage):
                 )
 
     def check_title_and_price_in_prod_page(self, exp_title, exp_price):
-        with (allure.step('Проверить наименование и стоимость товара на странице товара')):
+        with allure.step('Проверить наименование и стоимость товара на странице товара'):
             act_title = self.get_prod_title_on_page()
             act_price = self.get_prod_price_on_page()
 
-            assert act_title == exp_title, (f'Некорректное наименование товара\n'
-                                            f'ОР: {exp_title}\n'
-                                            f'ФР: {act_title}\n'
-                                            f'Скриншот {self.attach_screenshot(self.product_title_on_page.name)}')
-
-            assert act_price == exp_price, (f'Некорректная стоимость товара\n'
-                                            f'ОР: {exp_price}\n'
-                                            f'ФР: {act_price}\n'
-                                            f'Скриншот {self.attach_screenshot(self.product_price_on_page.name)}')
+            self.assert_data_equal_data(
+                act_res=act_title,
+                exp_res=exp_title,
+                message=f'Некорректное {self.product_title_on_page.name}'
+            )
+            self.assert_data_equal_data(
+                act_res=act_price,
+                exp_res=exp_price,
+                message=f'Некорректное {self.product_price_on_page.name}'
+            )
 
     def check_product_description_on_page(self, exp):
         with allure.step(f'Проверить {self.product_description.name}'):
             act = self.product_description.get_text_of_element()
-            assert exp == act, (f'Некорректное описание товара на странице!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.product_description.name)}')
+
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректное {self.product_description.name}'
+            )
 
     def choose_color_on_page(self, color: str):
         with allure.step(f'Выбрать цвет: {color}'):
@@ -151,9 +154,11 @@ class ProductPage(BasePage):
         with allure.step(f'Открыть {self.add_to_cart_modal.name}'):
             self.add_to_cart_button.click()
         with allure.step(f'Отображается {self.add_to_cart_modal.name}'):
-            assert self.add_to_cart_modal.is_visible(), (f'{self.add_to_cart_modal.name} не отображается!\n'
-                                                         f'Скриншот '
-                                                         f'{self.attach_screenshot(self.add_to_cart_modal.name)}')
+            self.assert_data_equal_data(
+                act_res=self.add_to_cart_modal.is_visible(),
+                exp_res=True,
+                message=f'{self.add_to_cart_modal.name} не отображается'
+            )
 
     def click_on_continue_shopping(self):
         with allure.step('Продолжить покупки'):
@@ -161,11 +166,8 @@ class ProductPage(BasePage):
 
     def cost_calculation(self, price):
         quantity = self.get_prod_units_quantity_on_product_page()
-        price = price.replace(',', '')
-
-        start_index = price.find(' ') + 1
-        new_price = float(price[start_index:]) * quantity
-        price = self.format_number(new_price)
+        new_price = self.parse_price_to_num(price) * quantity
+        price = self.parse_num_to_price(new_price)
 
         return price
 
@@ -200,12 +202,20 @@ class ProductPage(BasePage):
         return self.product_description.get_text_of_element()
 
     @staticmethod
-    def format_number(value):
+    def parse_num_to_price(value):
         # Форматирует число в строку вида $ x,xxx,xxx.xx
         d = Decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         s = f"$ {d:,.2f}"
 
         return s
+
+    @staticmethod
+    def parse_price_to_num(value: str):
+        # Форматирует строку вида $ x,xxx,xxx.xx в число
+        index = value.find(' ') + 1
+        num_value = float(value.replace(',', '')[index:])
+
+        return num_value
 
     def select_product_material(self):
         if self.radio_button_material.is_visible(timeout=2, frequency=0.5):

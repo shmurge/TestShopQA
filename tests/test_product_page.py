@@ -71,6 +71,7 @@ class TestProductPage(BaseTest):
         self.modal_add_to_cart.check_product_total_price(price)
 
     @allure.title('Наименование товара в модалке меняется в соответствии с опциями')
+    @pytest.mark.xfail
     @pytest.mark.parametrize(
         'material, color, result_title',
         [

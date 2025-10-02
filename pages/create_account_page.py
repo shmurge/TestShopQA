@@ -83,18 +83,21 @@ class CreateAccountPage(HeaderPage):
         with allure.step(f'{self.alert.name} отображается'):
             act = self.alert.get_text_of_element()
 
-            assert act == exp, (f'Некорректный имя {self.alert.name}\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.alert.name)}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректный имя {self.alert.name}'
+            )
 
     def check_placeholders_in_registration_form(self, exp):
         with allure.step(f'Проверить плэйсхолдер в {self.username_input.name}'):
             act = self.username_input.get_placeholder()
-            assert act == exp, (f'Некорректный плейсхолдер в {self.username_input.name}\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.username_input.name)}')
+
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректный плейсхолдер в {self.username_input.name}'
+            )
 
     @staticmethod
     def set_env_key(key, value):

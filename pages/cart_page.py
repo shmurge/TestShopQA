@@ -1,3 +1,5 @@
+from decimal import Decimal, ROUND_HALF_UP
+
 import allure
 
 from config.links import Links
@@ -24,20 +26,31 @@ class CartPage(HeaderPage):
         self.units_quantity_input = Input(
             self.browser, 'Счетчик единиц товара', *CartPageLocators.QUANTITY_INPUT
         )
+        self.subtotal_price = BaseElement(
+            self.browser, 'Общая стоимость без комиссии', *CartPageLocators.SUBTOTAL_PRICE
+        )
+        self.taxes = BaseElement(self.browser, 'Комиссия', *CartPageLocators.TAXES)
+        self.total_price = BaseElement(
+            self.browser, 'Общая стоимость с комиссией', *CartPageLocators.TOTAL_PRICE
+        )
 
     def order_overview_is_displayed(self):
-        with (allure.step(f'{self.order_overview.name} отображается')):
-            assert self.order_overview.is_visible(), (f'{self.order_overview.name} не отображается!\n'
-                                                      f'Скриншот {self.attach_screenshot(self.order_overview.name)}')
+        with allure.step(f'{self.order_overview.name} отображается'):
+            self.assert_data_equal_data(
+                act_res=self.order_overview.is_visible(),
+                exp_res=True,
+                message=f'{self.order_overview.name} не отображается'
+            )
 
     def should_be_message_if_cart_is_empty(self):
         with allure.step(f'Отображается сообщение {self.empty_cart_message.name}'):
             act = self.empty_cart_message.get_text_of_element()
 
-            assert act == InfoMessage.CART_IS_EMPTY, (f'Некорректное имя пользователя в профиле\n'
-                                                      f'ОР: {InfoMessage.CART_IS_EMPTY}\n'
-                                                      f'ФР: {act}\n'
-                                                      f'Скриншот {self.attach_screenshot(self.empty_cart_message.name)}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=InfoMessage.CART_IS_EMPTY,
+                message=f'{self.empty_cart_message.name} не отображается'
+            )
 
     def check_prod_title_price_and_quantity(self, exp_title, exp_price, exp_quantity: int, full_match=False):
         with allure.step('Проверить наличие товаров в корзине'):
@@ -58,27 +71,88 @@ class CartPage(HeaderPage):
             f = False
 
             if full_match:
-                assert prod_title in prods_list, (f'Товар {prod_title} не найден в корзине!\n'
-                                                  f'Скриншот {self.attach_screenshot(prod_title)}')
+                self.assert_data_in_data(
+                    act_res=prod_title,
+                    exp_res=prods_list,
+                    message=f'Товар {prod_title} не найден в корзине'
+                )
             else:
                 for t in prods_list:
                     if prod_title in t:
                         f = True
                         break
 
-                assert f is True, (f'Товар {prod_title} не найден в корзине!\n'
-                                   f'Скриншот {self.attach_screenshot(prod_title)}')
+                self.assert_data_equal_data(
+                    act_res=f,
+                    exp_res=True,
+                    message=f'Товар {prod_title} не найден в корзине'
+                )
 
     def check_product_quantity(self, act_quan, exp_quan):
         with allure.step('Проверить количество единиц товара'):
-            assert exp_quan == act_quan, f'Некорректное количество единиц товара!\n' \
-                                         f'ОР: {exp_quan}\n' \
-                                         f'ФР: {act_quan}\n' \
-                                         f'Скриншот {self.attach_screenshot(exp_quan)}'
+            self.assert_data_equal_data(
+                act_res=act_quan,
+                exp_res=exp_quan,
+                message='Некорректное количество единиц товара'
+            )
 
     def check_product_price(self, act_price, exp_price):
         with allure.step('Проверить стоимость товара'):
-            assert exp_price == act_price, f'Некорректная стоимость товара!\n' \
-                                           f'ОР: {exp_price}\n' \
-                                           f'ФР: {act_price}\n' \
-                                           f'Скриншот {self.attach_screenshot(exp_price)}'
+            self.assert_data_equal_data(
+                act_res=act_price,
+                exp_res=exp_price,
+                message='Некорректная стоимость товара'
+            )
+
+    def check_subtotal_price(self):
+        with allure.step(f'Проверить {self.subtotal_price.name}'):
+            act = self.get_subtotal_price()
+            exp = self.subtotal_price.get_text_of_element()
+
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректная {self.subtotal_price.name}'
+            )
+
+    def tax_should_be_15_percent(self):
+        with allure.step(f'{self.taxes.name} должна составлять 15%'):
+            subtotal_price = self.parse_price_to_num(self.get_subtotal_price())
+            act_tax = self.parse_num_to_price((subtotal_price / 100) * 15)
+            exp_tax = self.taxes.get_text_of_element()
+
+            self.assert_data_equal_data(
+                act_res=act_tax,
+                exp_res=exp_tax,
+                message='Некорректный размер комиссии'
+            )
+
+    def get_subtotal_price(self):
+        prices = [p.text for p in self.product_price.get_elements()]
+        new_prices = [self.parse_price_to_num(p) for p in prices]
+
+        summ_prices = sum(new_prices)
+
+        return self.parse_num_to_price(summ_prices)
+
+    def get_total_price_with_tax(self):
+        tax = self.parse_price_to_num(self.taxes.get_text_of_element())
+        subtotal_price = self.parse_price_to_num(self.get_subtotal_price())
+
+        return self.parse_num_to_price(subtotal_price + tax)
+
+    @staticmethod
+    def parse_num_to_price(value: (float, str)):
+        # Форматирует число в строку вида $ x,xxx,xxx.xx
+        d = Decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        s = f"$ {d:,.2f}"
+
+        return s
+
+    @staticmethod
+    def parse_price_to_num(value: str):
+        # Форматирует строку вида $ x,xxx,xxx.xx в число
+        index = value.find(' ') + 1
+        num_value = float(value.replace(',', '')[index:])
+
+        return num_value

@@ -50,3 +50,13 @@ class BasePage:
         )
 
         return screenshot_name
+
+    def assert_data_equal_data(self, act_res, exp_res, message):
+        assert act_res == exp_res, (f'{message}!\n'
+                                    f'ОР: {exp_res}\n'
+                                    f'ФР: {act_res}\n'
+                                    f'{self.attach_screenshot("Screenshot")} прикреплен')
+
+    def assert_data_in_data(self, act_res, exp_res, message):
+        assert act_res in exp_res, (f'{message}!\n'
+                                    f'{self.attach_screenshot("Screenshot")} прикреплен')

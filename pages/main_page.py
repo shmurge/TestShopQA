@@ -30,17 +30,21 @@ class MainPage(HeaderPage):
 
     def main_page_is_displayed(self):
         with allure.step('Отображается главная страница'):
-            assert self.search_input.is_visible(), (f'{self.search_input.name} не отображается!\n'
-                                                    f'Скриншот {self.attach_screenshot(self.search_input.name)}')
+            self.assert_data_equal_data(
+                act_res=self.search_input.is_visible(),
+                exp_res=True,
+                message=f'{self.search_input.name} не отображается'
+            )
 
     def check_placeholder_in_search_input(self, exp):
         with allure.step(f'Проверить плэйсхолдер в {self.search_input.name}'):
             act = self.search_input.get_placeholder()
 
-            assert act == exp, (f'Некорректный плэйсхолдер\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.search_input.name)}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректный плэйсхолдер в {self.search_input.name}'
+            )
 
     def select_random_product(self):
         titles = self.product_title.get_elements()
@@ -77,10 +81,11 @@ class MainPage(HeaderPage):
             titles = [t.text.strip() for t in self.product_title.get_elements()]
 
             for title in titles:
-                assert keyword.lower() in title.lower(), (f'Некорректный результат поиска!\n'
-                                                          f'Найденный товар {title},\n'
-                                                          f'не содержит {keyword} в наименовании!\n'
-                                                          f'Скриншот {self.attach_screenshot(title)}')
+                self.assert_data_in_data(
+                    act_res=keyword.lower(),
+                    exp_res=title.lower(),
+                    message=f'Найденный товар {title} не содержит {keyword} в наименовании'
+                )
 
     def check_result_count(self):
         with allure.step('Корректное количество найденных товаров в счетчике'):
@@ -90,9 +95,11 @@ class MainPage(HeaderPage):
             space_index = cnt_res.find(' ')
             res_count = int(cnt_res[parenthesis_index:space_index])
 
-            assert len(titles) == res_count, (f'Некорректый результат в счетчике найденных товаров!\n'
-                                              f'В счетчике: {res_count}\n'
-                                              f'Товаров на странице: {len(titles)}')
+            self.assert_data_equal_data(
+                act_res=len(titles),
+                exp_res=res_count,
+                message='Некорректый результат в счетчике найденных товаров'
+            )
 
     def check_message_with_no_results(self):
         with allure.step('Отображается попап с отсутствием результатов поиска'):
@@ -101,7 +108,8 @@ class MainPage(HeaderPage):
             act = self.message_no_searching_results.get_text_of_element()
             exp = InfoMessage().message_no_results(query)
 
-            assert act == exp, (f'Некорректно сообщение!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.message_no_searching_results.name)}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message='Некорректно сообщение'
+            )

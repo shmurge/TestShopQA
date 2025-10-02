@@ -42,10 +42,11 @@ class HeaderPage(BasePage):
     def username_is_correct(self, exp):
         act = self.username_in_header.get_text_of_element()
         with allure.step(f'{self.username_in_header.name} в хэдере корректное'):
-            assert act == exp, (f'Некорректное имя пользователя в хэдере\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}\n'
-                                f'Скриншот {self.attach_screenshot(self.username_in_header.name)}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'{self.username_in_header.name} некорректно'
+            )
 
     def goto_my_account(self):
         with allure.step('Перейти в аккаунт'):
@@ -59,13 +60,18 @@ class HeaderPage(BasePage):
 
     def sign_in_button_is_displayed(self):
         with allure.step(f'{self.sign_in_button.name} отображается'):
-            assert self.sign_in_button.is_visible(), (f'{self.sign_in_button.name} не отображается!\n',
-                                                      f'Скриншот {self.attach_screenshot(self.sign_in_button.name)}')
+            self.assert_data_equal_data(
+                act_res=self.sign_in_button.is_visible(),
+                exp_res=True,
+                message=f'{self.sign_in_button.name} не отображается'
+            )
 
     def check_prods_quantity_in_header(self, exp: int):
         with allure.step('Проверить количество товаров в счетчике хэдера'):
             act = int(self.counter_on_cart.get_text_of_element())
 
-            assert act == exp, (f'Некорректное количество товаров в счетчике хэдера!\n'
-                                f'ОР: {exp}\n'
-                                f'ФР: {act}')
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message='Некорректное количество товаров в счетчике хэдера'
+            )
