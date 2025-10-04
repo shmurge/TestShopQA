@@ -46,21 +46,21 @@ ___
 
 ## Структура проекта
 
-+ :file_folder: **TestShopQA** *# Репозиторий*
-  + :file_folder: **config** *# Файлы конфигурации тестов*
-  + :file_folder: **data_for_tests** *# Тестовые данные*
-  + :file_folder: **elements** *# Элементы интерфейса*
-  + :file_folder: **locators** *# Локаторы на страницах*
-  + :file_folder: **pages** *# Методы взаимодействия и условия проверок*
-  + :file_folder: **tests** *# Тесты*
-    + :page_facing_up: **test_cart_page** *# Тесты страницы корзины*
-    + :page_facing_up: **test_create_account_page** *# Тесты страницы создания аккаунта*
-    + :page_facing_up: **test_login_page** *# Тесты страницы авторизации*
-    + :page_facing_up: **test_main_page** *# Тесты главной страницы*
-    + :page_facing_up: **test_product_page** *# Тесты страницы товара*
-  + :page_facing_up: **conftest** *# Фикстуры для тестов*
-  + :page_facing_up: **pytest.ini** *# Файл конфигурации для библиотеки Pytest*
-  + :page_facing_up: **requirements.txt** *# Зависимости*
++ :file_folder: **TestShopQA** *- Репозиторий*
+  + :file_folder: **config** *- Файлы конфигурации тестов*
+  + :file_folder: **data_for_tests** *- Тестовые данные*
+  + :file_folder: **elements** *- Элементы интерфейса*
+  + :file_folder: **locators** *- Локаторы на страницах*
+  + :file_folder: **pages** *- Методы взаимодействия и условия проверок*
+  + :file_folder: **tests** * Файлы с тестами*
+    + :page_facing_up: **test_cart_page** *- Тесты страницы корзины*
+    + :page_facing_up: **test_create_account_page** *- Тесты страницы создания аккаунта*
+    + :page_facing_up: **test_login_page** *- Тесты страницы авторизации*
+    + :page_facing_up: **test_main_page** *- Тесты главной страницы*
+    + :page_facing_up: **test_product_page** *- Тесты страницы товара*
+  + :page_facing_up: **conftest** *- Фикстуры для тестов*
+  + :page_facing_up: **pytest.ini** *- Файл конфигурации для библиотеки Pytest*
+  + :page_facing_up: **requirements.txt** *- Зависимости*
 ___
 
 ### Схема проектирования
