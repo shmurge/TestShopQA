@@ -8,3 +8,5 @@ class CartPageLocators:
     SUBTOTAL_PRICE = ('css selector', '[id="order_total_untaxed"] [class="monetary_field"]')
     TAXES = ('css selector', '[id="order_total_taxes"] [class="monetary_field"]')
     TOTAL_PRICE = ('css selector', '[class="monetary_field text-end p-0"]')
+
+    DELETE_PRODUCT_BUTTON = ('css selector', '[title="Remove from cart"]')

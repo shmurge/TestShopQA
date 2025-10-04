@@ -12,6 +12,7 @@ class BasePage:
     def __init__(self, browser: WebDriver):
         self.browser = browser
         self.wait = WebDriverWait(browser, timeout=15, poll_frequency=1)
+        self.ec = EC
 
     def open(self, page_url=None):
         page_url = page_url if page_url else self.PAGE_URL
@@ -60,3 +61,7 @@ class BasePage:
     def assert_data_in_data(self, act_res, exp_res, message):
         assert act_res in exp_res, (f'{message}!\n'
                                     f'{self.attach_screenshot("Screenshot")} прикреплен')
+
+    def assert_data_not_in_data(self, act_res, exp_res, message):
+        assert act_res not in exp_res, (f'{message}!\n'
+                                        f'{self.attach_screenshot("Screenshot")} прикреплен')

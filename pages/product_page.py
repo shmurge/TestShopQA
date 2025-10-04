@@ -1,17 +1,16 @@
 from decimal import Decimal, ROUND_HALF_UP
 
 import allure
-from time import sleep
 import random
 
 from elements.base_element import BaseElement
 from elements.button import Button
-from config.links import Links
 from elements.input import Input
 from locators.locs_modal_add_to_cart import ModalAddToCartLocators
 from locators.locs_product_page import ProductPageLocators
 from pages.base_page import BasePage
-from selenium.webdriver.support import expected_conditions as EC
+from pages.header_page import HeaderPage
+from pages.main_page import MainPage
 
 
 class ProductPage(BasePage):
@@ -19,6 +18,8 @@ class ProductPage(BasePage):
     def __init__(self, browser):
         super().__init__(browser)
 
+        self.header_page = HeaderPage(self.browser)
+        self.main_page = MainPage(self.browser)
         self.product_title_on_page = BaseElement(
             self.browser, 'Наименование товара на странице', *ProductPageLocators.PRODUCT_TITLE
         )
@@ -82,8 +83,18 @@ class ProductPage(BasePage):
         with allure.step('Добавить товар в корзину'):
             self.add_to_cart_button.click()
             if self.add_to_cart_modal.is_visible(timeout=2, frequency=0.5):
-                self.wait.until(EC.visibility_of_all_elements_located(self.product_photos_in_modal.locator))
+                self.wait.until(self.ec.visibility_of_all_elements_located(self.product_photos_in_modal.locator))
                 self.continue_shopping_button.click()
+
+    def add_multiple_prod_to_cart(self, quantity=3):
+        with allure.step(f'Добавить несколько ({quantity}) товаров в корзину'):
+            for i in range(1, quantity + 1):
+                self.main_page.open()
+                self.main_page.is_opened()
+                self.main_page.select_random_product()
+                self.add_prod_to_cart_and_continue_shopping()
+                self.header_page.check_prods_quantity_in_header(i)
+                self.header_page.goto_main_page()
 
     def add_to_cart_modal_is_displayed(self):
         with allure.step(f'Отображается {self.add_to_cart_modal.name}'):
@@ -97,7 +108,7 @@ class ProductPage(BasePage):
             for _ in range(quantity):
                 self.add_one_unit_button.click()
                 count += 1
-                self.wait.until(EC.text_to_be_present_in_element_attribute(
+                self.wait.until(self.ec.text_to_be_present_in_element_attribute(
                     self.units_quantity_input.locator, 'value', str(count))
                 )
 

@@ -1,10 +1,7 @@
 import allure
-from selenium.webdriver.support import expected_conditions as EC
 
 from config.links import Links
 from elements.base_element import BaseElement
-from elements.button import Button
-from elements.input import Input
 from locators.locs_account_page import AccountPageLocators
 from pages.header_page import HeaderPage
 

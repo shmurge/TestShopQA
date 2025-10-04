@@ -1,6 +1,7 @@
 from decimal import Decimal, ROUND_HALF_UP
 
 import allure
+import random
 
 from config.links import Links
 from data_for_tests.data_for_tests import InfoMessage
@@ -32,6 +33,9 @@ class CartPage(HeaderPage):
         self.taxes = BaseElement(self.browser, 'Комиссия', *CartPageLocators.TAXES)
         self.total_price = BaseElement(
             self.browser, 'Общая стоимость с комиссией', *CartPageLocators.TOTAL_PRICE
+        )
+        self.delete_product_button = Button(
+            self.browser, 'Удалить товар из корзины', *CartPageLocators.DELETE_PRODUCT_BUTTON
         )
 
     def order_overview_is_displayed(self):
@@ -67,26 +71,68 @@ class CartPage(HeaderPage):
                         self.check_product_price(prices[i], exp_price)
 
     def product_is_on_order_overview(self, prod_title, prods_list: list, full_match=False):
-        with (allure.step('Искомый товар найден в корзине')):
-            f = False
+        f = False
 
-            if full_match:
-                self.assert_data_in_data(
-                    act_res=prod_title,
-                    exp_res=prods_list,
-                    message=f'Товар {prod_title} не найден в корзине'
-                )
-            else:
-                for t in prods_list:
-                    if prod_title in t:
-                        f = True
-                        break
+        if full_match:
+            self.assert_data_in_data(
+                act_res=prod_title,
+                exp_res=prods_list,
+                message=f'Товар {prod_title} не найден в корзине'
+            )
+        else:
+            for t in prods_list:
+                if prod_title in t:
+                    f = True
+                    break
 
-                self.assert_data_equal_data(
-                    act_res=f,
-                    exp_res=True,
-                    message=f'Товар {prod_title} не найден в корзине'
-                )
+            self.assert_data_equal_data(
+                act_res=f,
+                exp_res=True,
+                message=f'Товар {prod_title} не найден в корзине'
+            )
+
+    def product_should_not_be_on_order_overview(self, prod_title):
+        with allure.step(f'Товар {prod_title} отсутствует в корзине после удаления'):
+            f = True
+            self.order_overview.is_present()
+            titles = [t.text for t in self.product_title.get_elements()]
+
+            for t in titles:
+                if prod_title in t:
+                    f = False
+                    break
+
+            self.assert_data_equal_data(
+                act_res=f,
+                exp_res=True,
+                message=f'Товар {prod_title} отображется в корзине после удаления'
+            )
+
+    def remove_product_from_cart(self, prod_title: str):
+        with allure.step(f'Удалить товар {prod_title} из корзины'):
+            titles = [t.text for t in self.product_title.get_elements()]
+            remove_buttons = self.delete_product_button.get_elements()
+
+            for i in range(len(titles)):
+                if prod_title in titles[i]:
+                    self.delete_product_button.scroll_to_element(remove_buttons[i])
+                    remove_buttons[i].click()
+                    self.wait.until(self.ec.invisibility_of_element_located(remove_buttons[i]))
+
+
+    def remove_random_product_from_cart(self):
+        with allure.step(f'Удалить рандомный товар из корзины'):
+            titles = [t.text for t in self.product_title.get_elements()]
+            remove_buttons = self.delete_product_button.get_elements()
+            prod_title = random.choice(titles)
+
+            for i in range(len(titles)):
+                if prod_title in titles[i]:
+                    self.delete_product_button.scroll_to_element(remove_buttons[i])
+                    remove_buttons[i].click()
+                    self.wait.until(self.ec.invisibility_of_element_located(remove_buttons[i]))
+
+            return prod_title
 
     def check_product_quantity(self, act_quan, exp_quan):
         with allure.step('Проверить количество единиц товара'):
@@ -125,6 +171,17 @@ class CartPage(HeaderPage):
                 act_res=act_tax,
                 exp_res=exp_tax,
                 message='Некорректный размер комиссии'
+            )
+
+    def check_total_price_with_tax(self):
+        with allure.step(f'Проверить {self.total_price.name}'):
+            act = self.get_total_price_with_tax()
+            exp = self.total_price.get_text_of_element()
+
+            self.assert_data_equal_data(
+                act_res=act,
+                exp_res=exp,
+                message=f'Некорректная {self.total_price.name}'
             )
 
     def get_subtotal_price(self):

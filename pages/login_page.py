@@ -1,6 +1,4 @@
 import allure
-import pytest
-from time import sleep
 
 from config.links import Links
 from elements.input import Input

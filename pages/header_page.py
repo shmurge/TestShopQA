@@ -1,8 +1,8 @@
 import allure
 
+
 from elements.base_element import BaseElement
 from elements.button import Button
-from elements.input import Input
 from locators.locs_header_page import HeaderPageLocators
 from pages.base_page import BasePage
 
@@ -70,8 +70,8 @@ class HeaderPage(BasePage):
         with allure.step('Проверить количество товаров в счетчике хэдера'):
             act = int(self.counter_on_cart.get_text_of_element())
 
-            self.assert_data_equal_data(
-                act_res=act,
-                exp_res=exp,
-                message='Некорректное количество товаров в счетчике хэдера'
-            )
+            assert self.wait.until(
+                self.ec.text_to_be_present_in_element(self.counter_on_cart.locator, str(exp))
+            ), (f'Некорректное количество товаров в счетчике хэдера\n'
+                f'ОР: {exp}\n'
+                f'ФР: {act}')

@@ -2,7 +2,6 @@ import os
 
 import allure
 from dotenv import load_dotenv, set_key
-from time import sleep
 
 from config.links import Links
 from elements.base_element import BaseElement
