@@ -52,7 +52,7 @@ ___
   + :file_folder: **elements** *- Элементы интерфейса*
   + :file_folder: **locators** *- Локаторы на страницах*
   + :file_folder: **pages** *- Методы взаимодействия и условия проверок*
-  + :file_folder: **tests** * Файлы с тестами*
+  + :file_folder: **tests** *- Файлы с тестами*
     + :page_facing_up: **test_cart_page** *- Тесты страницы корзины*
     + :page_facing_up: **test_create_account_page** *- Тесты страницы создания аккаунта*
     + :page_facing_up: **test_login_page** *- Тесты страницы авторизации*
