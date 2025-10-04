@@ -8,6 +8,7 @@ from data_for_tests.data_for_tests import ProductInfo
 class TestProductPage(BaseTest):
 
     @allure.title('Добавление товара в корзину')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_add_prod_to_cart_and_continue_shopping(self, pre_goto_prod_page):
         title, price, quantity = self.product_page.get_primary_info_about_product_on_product_page()
         self.product_page.add_prod_to_cart_and_continue_shopping()
@@ -18,6 +19,7 @@ class TestProductPage(BaseTest):
         self.cart_page.check_prod_title_price_and_quantity(title, price, quantity)
 
     @allure.title('Добавление в корзину нескольких единиц одного товара')
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize('exp_quan', [1, 2, 3, 4, 5, 6, 7])
     def test_add_multiple_units_of_the_same_product(self, exp_quan, pre_goto_prod_page):
         self.product_page.add_multiple_units_of_prod(quantity=exp_quan)
@@ -30,12 +32,14 @@ class TestProductPage(BaseTest):
         self.cart_page.check_prod_title_price_and_quantity(title, price, act_quan)
 
     @allure.title('Закрытие модалки "Добавить в корзину"')
+    @allure.severity(allure.severity_level.TRIVIAL)
     def test_close_modal_add_to_cart(self, pre_go_to_customize_desk_page):
         self.product_page.open_modal_add_to_cart()
         self.modal_add_to_cart.close_modal()
         self.modal_add_to_cart.modal_should_not_be_displayed()
 
     @allure.title('Проверка полной информации о товаре на странице')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_check_complete_prod_info_on_page(self, pre_go_to_customize_desk_page):
         self.product_page.check_title_and_price_in_prod_page(
             exp_title=ProductInfo.CUSTOMIZE_DESK_SHORT_TITLE,
@@ -44,6 +48,7 @@ class TestProductPage(BaseTest):
         self.product_page.check_product_description_on_page(exp=ProductInfo.DESCRIPTION_CUSTOMIZE_DESK)
 
     @allure.title('Цена стола из алюминия отличается от дефолтной')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_price_of_aluminium_table_differs_from_the_default(self, pre_go_to_customize_desk_page):
         self.product_page.choose_material_on_page(material='aluminium')
 
@@ -53,12 +58,14 @@ class TestProductPage(BaseTest):
         )
 
     @allure.title('Наименование и цена товара в модалке корректные')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_title_and_price_in_modal_should_be_correct(self, pre_go_to_customize_desk_page):
         title, price, act_quan = self.product_page.get_primary_info_about_product_on_product_page()
         self.product_page.open_modal_add_to_cart()
         self.modal_add_to_cart.check_prod_title_price_and_quantity(title, price, act_quan)
 
     @allure.title('Количество единиц товара и итоговая стоимость в модалке корректные')
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize('exp_quan', [1, 2, 5, 8, 11, 15, 20])
     def test_should_be_correct_unit_quan_and_total_price_in_modal(self, exp_quan, pre_go_to_customize_desk_page):
         self.product_page.add_multiple_units_of_prod(quantity=exp_quan)
@@ -69,6 +76,7 @@ class TestProductPage(BaseTest):
         self.modal_add_to_cart.check_product_total_price(price)
 
     @allure.title('Наименование товара в модалке меняется в соответствии с опциями')
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.xfail
     @pytest.mark.parametrize(
         'material, color, result_title',
@@ -89,6 +97,7 @@ class TestProductPage(BaseTest):
         self.modal_add_to_cart.check_product_title(result_title, full_match=True)
 
     @allure.title('Наименование товара в козине меняется в соответствии с опциями')
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize(
         'material, color, result_title',
         [

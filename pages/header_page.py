@@ -1,6 +1,5 @@
 import allure
 
-
 from elements.base_element import BaseElement
 from elements.button import Button
 from locators.locs_header_page import HeaderPageLocators

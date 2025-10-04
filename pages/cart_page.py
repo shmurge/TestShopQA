@@ -119,7 +119,6 @@ class CartPage(HeaderPage):
                     remove_buttons[i].click()
                     self.wait.until(self.ec.invisibility_of_element_located(remove_buttons[i]))
 
-
     def remove_random_product_from_cart(self):
         with allure.step(f'Удалить рандомный товар из корзины'):
             titles = [t.text for t in self.product_title.get_elements()]

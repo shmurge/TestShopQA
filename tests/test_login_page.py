@@ -10,28 +10,15 @@ from data_for_tests.data_for_tests import PlaceHolder, UserData, ErrorMessage
 class TestLoginPage(BaseTest):
 
     @allure.title('Переход на страницу создания аккаунта')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_goto_create_account_page(self):
         self.login_page.open()
         self.login_page.go_to_create_account_page()
         self.create_account_page.is_opened()
         self.create_account_page.registration_form_is_displayed()
 
-    @allure.title('Переход на страницу корзины')
-    def test_goto_cart_page(self):
-        self.login_page.open()
-        self.header_page.goto_cart_page()
-        self.cart_page.is_opened()
-        self.cart_page.order_overview_is_displayed()
-
-    @allure.title('Переход на главную страницу')
-    def test_goto_main_page(self):
-        self.login_page.open()
-        self.header_page.goto_main_page()
-        self.main_page.is_opened()
-        self.main_page.main_page_is_displayed()
-
-    #@pytest.mark.order(1)
     @allure.title('Авторизация пользователя')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_user_authorization(self):
         self.login_page.open()
         self.login_page.is_opened()
@@ -47,6 +34,7 @@ class TestLoginPage(BaseTest):
         self.header_page.username_is_correct(UserData.USERNAME)
 
     @allure.title('Нельзя авторизоваться, незарегистрированным пользователем')
+    @allure.severity(allure.severity_level.NORMAL)
     def test_unregistered_user_can_not_login(self):
         self.login_page.open()
         self.login_page.is_opened()
@@ -57,6 +45,7 @@ class TestLoginPage(BaseTest):
         self.login_page.error_alert_is_displayed(ErrorMessage.WRONG_LOGIN_OR_PASSWORD)
 
     @allure.title('Проверка плэйсхолдеров формы авторизации')
+    @allure.severity(allure.severity_level.TRIVIAL)
     def test_check_placeholders_in_login_form(self):
         self.login_page.open()
         self.login_page.is_opened()
@@ -65,3 +54,19 @@ class TestLoginPage(BaseTest):
             PlaceHolder.LOGIN_FORM_EMAIL_INPUT,
             PlaceHolder.LOGIN_FORM_PASSWORD_INPUT
         )
+
+    @allure.title('Переход на страницу корзины')
+    @allure.severity(allure.severity_level.TRIVIAL)
+    def test_goto_cart_page(self):
+        self.login_page.open()
+        self.header_page.goto_cart_page()
+        self.cart_page.is_opened()
+        self.cart_page.order_overview_is_displayed()
+
+    @allure.title('Переход на главную страницу')
+    @allure.severity(allure.severity_level.TRIVIAL)
+    def test_goto_main_page(self):
+        self.login_page.open()
+        self.header_page.goto_main_page()
+        self.main_page.is_opened()
+        self.main_page.main_page_is_displayed()
