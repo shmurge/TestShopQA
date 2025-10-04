@@ -51,7 +51,7 @@ ___
   + :file_folder: **data_for_tests** *- Тестовые данные*
   + :file_folder: **elements** *- Методы взаимодействия с элементами страниц*
   + :file_folder: **locators** *- Локаторы на страницах*
-  + :file_folder: **pages** *- Логика взаимодействия с веб приложением*
+  + :file_folder: **pages** *- Методы взаимодействия со страницами веб приложения*
   + :file_folder: **tests** *- Файлы с тестами*
     + :page_facing_up: **test_cart_page** *- Тесты страницы корзины*
     + :page_facing_up: **test_create_account_page** *- Тесты страницы создания аккаунта*
