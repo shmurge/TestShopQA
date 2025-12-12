@@ -34,7 +34,7 @@ class CreateAccountPage(HeaderPage):
             assert self.registration_form.is_visible(), (f'{self.registration_form.name} не отображается!\n'
                                                          f'Скриншот {self.attach_screenshot(self.registration_form.name)}')
 
-    def fill_email(self, data, save_to_env=True):
+    def fill_email(self, data, save_to_env):
         with allure.step(f'Заполнить {self.email_input.name}'):
             self.email_input.fill_input(data)
             if save_to_env:
@@ -42,7 +42,7 @@ class CreateAccountPage(HeaderPage):
 
         return data
 
-    def fill_username(self, data, save_to_env=True):
+    def fill_username(self, data, save_to_env):
         with allure.step(f'Заполнить {self.username_input.name}'):
             self.username_input.fill_input(data)
             if save_to_env:
@@ -50,7 +50,7 @@ class CreateAccountPage(HeaderPage):
 
         return data
 
-    def fill_password(self, data, save_to_env=True):
+    def fill_password(self, data, save_to_env):
         with allure.step(f'Заполнить {self.password_input.name}'):
             self.password_input.fill_input(data)
             if save_to_env:
@@ -69,7 +69,7 @@ class CreateAccountPage(HeaderPage):
                                email,
                                username,
                                password,
-                               save_to_env=True):
+                               save_to_env):
         with allure.step(f'Заполнить {self.registration_form.name}'):
             self.registration_form.is_visible()
             self.fill_email(email, save_to_env)

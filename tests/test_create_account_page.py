@@ -2,6 +2,7 @@ import allure
 import pytest
 
 from config.base_test import BaseTest
+from constants import SAVE_TO_DOTENV
 from data_for_tests.data_for_tests import UserData, InputData, ErrorMessage, PlaceHolder
 
 
@@ -10,6 +11,7 @@ from data_for_tests.data_for_tests import UserData, InputData, ErrorMessage, Pla
 class TestCreateAccountPage(BaseTest):
 
     @pytest.mark.order(1)
+    @pytest.mark.update_creds_in_dotenv
     @allure.title('Создание аккаунта')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_create_account(self):
@@ -18,7 +20,9 @@ class TestCreateAccountPage(BaseTest):
         self.create_account_page.fill_registration_form(
             email=InputData.VALID_EMAIL,
             username=InputData.USERNAME,
-            password=InputData.VALID_PASSWORD)
+            password=InputData.VALID_PASSWORD,
+            save_to_env=SAVE_TO_DOTENV
+        )
 
         self.account_page.user_information_is_correct(
             username=InputData.USERNAME,
