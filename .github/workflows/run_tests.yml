@@ -89,7 +89,8 @@ jobs:
         uses: actions/download-artifact@v4
       - name: Get variables
         run: |
-          echo "USERNAME=${{ vars.USERNAME }}" >> $GITHUB_ENV
+          echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+          echo "LOGIN=${{ secrets.LOGIN }}" >> $GITHUB_ENV
           echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
       - name: run-in-chrome-browser
         if: "github.event.inputs.deployment_target == 'chrome-browser'"
