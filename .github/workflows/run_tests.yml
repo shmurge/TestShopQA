@@ -87,11 +87,11 @@ jobs:
         run: pip install -r requirements.txt
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
-      - name: Get variables
-        run: |
-          echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
-          echo "LOGIN=${{ secrets.LOGIN }}" >> $GITHUB_ENV
-          echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+      # - name: Get variables
+      #   run: |
+      #     echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+      #     echo "LOGIN=${{ secrets.LOGIN }}" >> $GITHUB_ENV
+      #     echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
       - name: run-in-chrome-browser
         if: "github.event.inputs.deployment_target == 'chrome-browser'"
         run: pytest -vs --tb=line --headless -n=5 --alluredir=allure_report
