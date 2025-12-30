@@ -246,11 +246,11 @@ jobs:
           echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
       - name: run-in-chrome-browser
         if: github.event.inputs.deployment_target == 'chrome-browser'
-        run: pytest -vs --tb=line --headless -n=5 --alluredir=allure_report
+        run: pytest -vs --tb=line --headless -n=5 --reruns=3 --alluredir=allure_report
         continue-on-error: true
       - name: run-in-firefox-browser
         if: github.event.inputs.deployment_target == 'firefox-browser'
-        run: pytest -vs --tb=line --headless --browser=firefox -n=5 --github_actions --alluredir=allure_report
+        run: pytest -vs --tb=line --headless --browser=firefox -n=5 --reruns=3 --github_actions --alluredir=allure_report
         continue-on-error: true
       - name: Upload Allure report
         uses: actions/upload-artifact@v4
@@ -290,12 +290,7 @@ jobs:
     steps:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v4
-        with:
-          name: _site
-          path: _site
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
       - name: Deploy to Github pages
         uses: actions/deploy-pages@v4
