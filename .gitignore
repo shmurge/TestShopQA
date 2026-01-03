@@ -2,4 +2,6 @@ venv
 .idea
 .env
 allure_report
+allure-report
+allure-results
 __pycache__
