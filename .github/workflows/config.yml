@@ -41,7 +41,7 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
         if: github.event.inputs.deployment_target == 'firefox-browser'
         run: |
-          docker compose up run_tests_in_firefox --exit-code-from rrun_tests_in_firefox || true
+          docker compose up run_tests_in_firefox --exit-code-from run_tests_in_firefox || true
 
       - name: Copy history from gh-pages to allure-results
         run: |
