@@ -1,5 +1,6 @@
 FROM python:3.11-bookworm
 
+# Java and Firefox
 RUN apt-get update && apt-get install -y \
     wget gnupg ca-certificates firefox-esr default-jdk
 
