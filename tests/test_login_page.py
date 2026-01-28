@@ -9,6 +9,7 @@ from data_for_tests.data_for_tests import PlaceHolder, UserData, ErrorMessage
 @allure.suite('Страница логина')
 class TestLoginPage(BaseTest):
 
+    @allure.feature('Навигация')
     @allure.title('Переход на страницу создания аккаунта')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_goto_create_account_page(self):
@@ -17,6 +18,7 @@ class TestLoginPage(BaseTest):
         self.create_account_page.is_opened()
         self.create_account_page.registration_form_is_displayed()
 
+    @allure.feature('Пользователь')
     @allure.title('Авторизация пользователя')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_user_authorization(self):
@@ -33,6 +35,7 @@ class TestLoginPage(BaseTest):
         )
         self.header_page.username_is_correct(UserData.USERNAME)
 
+    @allure.feature('Пользователь')
     @allure.title('Нельзя авторизоваться, незарегистрированным пользователем')
     @allure.severity(allure.severity_level.NORMAL)
     def test_unregistered_user_can_not_login(self):
@@ -44,6 +47,7 @@ class TestLoginPage(BaseTest):
 
         self.login_page.error_alert_is_displayed(ErrorMessage.WRONG_LOGIN_OR_PASSWORD)
 
+    @allure.feature('Дизайн')
     @allure.title('Проверка плэйсхолдеров формы авторизации')
     @allure.severity(allure.severity_level.TRIVIAL)
     def test_check_placeholders_in_login_form(self):
@@ -55,7 +59,8 @@ class TestLoginPage(BaseTest):
             PlaceHolder.LOGIN_FORM_PASSWORD_INPUT
         )
 
-    @allure.title('Переход на страницу корзины')
+    @allure.feature('Навигация')
+    @allure.title('Переход на страницу корзины со страницы авторизации')
     @allure.severity(allure.severity_level.TRIVIAL)
     def test_goto_cart_page(self):
         self.login_page.open()
@@ -63,7 +68,8 @@ class TestLoginPage(BaseTest):
         self.cart_page.is_opened()
         self.cart_page.order_overview_is_displayed()
 
-    @allure.title('Переход на главную страницу')
+    @allure.feature('Навигация')
+    @allure.title('Переход на главную страницу со страницы авторизации')
     @allure.severity(allure.severity_level.TRIVIAL)
     def test_goto_main_page(self):
         self.login_page.open()
