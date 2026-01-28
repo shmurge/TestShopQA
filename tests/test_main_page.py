@@ -9,6 +9,7 @@ from data_for_tests.data_for_tests import PlaceHolder, InputData, InfoMessage
 @allure.suite('Главная страница')
 class TestMainPage(BaseTest):
 
+    @allure.feature('Дизайн')
     @allure.title('Проверка плэйсхолдера в инпуте поиска товара')
     @allure.severity(allure.severity_level.TRIVIAL)
     def test_check_placeholder_in_search_input(self):
@@ -16,6 +17,7 @@ class TestMainPage(BaseTest):
         self.main_page.is_opened()
         self.main_page.check_placeholder_in_search_input(PlaceHolder.MAIN_PAGE_SEARCH_INPUT)
 
+    @allure.feature('Товар')
     @allure.title('Выбор товара на главной странице')
     @allure.severity(allure.severity_level.CRITICAL)
     def test_select_product_on_main_page(self):
@@ -24,6 +26,7 @@ class TestMainPage(BaseTest):
         title, price = self.main_page.select_random_product()
         self.product_page.check_title_and_price_in_prod_page(title, price)
 
+    @allure.feature('Поиск')
     @allure.title('Поиск товара на главной странице')
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.xfail
@@ -34,6 +37,7 @@ class TestMainPage(BaseTest):
         self.main_page.search_product(query)
         self.main_page.check_searching_result(query)
 
+    @allure.feature('Поиск')
     @allure.title('Поиск несуществующего товара на главной странице')
     @allure.severity(allure.severity_level.NORMAL)
     def test_search_non_existent_product_on_main_page(self):
@@ -41,6 +45,7 @@ class TestMainPage(BaseTest):
         self.main_page.is_opened()
         self.main_page.check_message_with_no_results()
 
+    @allure.feature('Навигация')
     @allure.title('Перейти в аккаунт')
     @allure.severity(allure.severity_level.NORMAL)
     def test_goto_account_page_from_main(self, pre_login):
@@ -49,6 +54,7 @@ class TestMainPage(BaseTest):
         self.header_page.goto_my_account()
         self.account_page.is_opened()
 
+    @allure.feature('Пользователь')
     @allure.title('Выйти из аккаунта')
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.order(after="test_goto_account_page_from_main")
@@ -58,7 +64,8 @@ class TestMainPage(BaseTest):
         self.header_page.logout()
         self.header_page.sign_in_button_is_displayed()
 
-    @allure.title('Переход на страницу логина')
+    @allure.feature('Навигация')
+    @allure.title('Переход на страницу логина с главной')
     @allure.severity(allure.severity_level.TRIVIAL)
     def test_goto_login_page(self):
         self.main_page.open()
@@ -67,7 +74,8 @@ class TestMainPage(BaseTest):
         self.login_page.is_opened()
         self.login_page.login_form_is_displayed()
 
-    @allure.title('Переход на страницу корзины')
+    @allure.feature('Навигация')
+    @allure.title('Переход на страницу корзины с главной')
     @allure.severity(allure.severity_level.TRIVIAL)
     def test_goto_cart_page(self):
         self.main_page.open()
