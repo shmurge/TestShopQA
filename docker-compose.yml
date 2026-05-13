@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   run_tests_in_chrome:
-    image: test-shop-qa
+    image: shmurge3/test-shop-qa
     build:
       context: .
       dockerfile: Dockerfile
@@ -15,7 +15,7 @@ services:
       - LOGIN=${LOGIN}
       - PASSWORD=${PASSWORD}
   run_tests_in_firefox:
-    image: test-shop-qa
+    image: shmurge3/test-shop-qa
     build:
       context: .
       dockerfile: Dockerfile
@@ -28,7 +28,7 @@ services:
       - LOGIN=${LOGIN}
       - PASSWORD=${PASSWORD}
   report:
-    image: test-shop-qa
+    image: shmurge3/test-shop-qa
     build:
       context: .
       dockerfile: Dockerfile
