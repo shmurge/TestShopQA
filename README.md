@@ -14,37 +14,20 @@ ___
 ## Версии ПО и библиотек
 
 Python 3.11\
-allure-pytest 2.15.0\
-allure-python-commons 2.15.0\
-attrs==25.3.0\
-certifi==2025.8.3\
-charset-normalizer==3.4.3\
-execnet==2.1.1\
-Faker==37.6.0\
-h11==0.16.0\
-idna==3.10\
-iniconfig==2.1.0\
-outcome==1.3.0.post0\
-packaging==25.0\
-pluggy==1.6.0\
-Pygments==2.19.2\
-PySocks==1.7.1\
-pytest==8.4.1\
-pytest-order==1.3.0\
-pytest-rerunfailures==15.1\
-pytest-xdist==3.8.0\
-python-dotenv==1.1.1\
-requests==2.32.5\
-selenium==4.35.0\
-sniffio==1.3.1\
-sortedcontainers==2.4.0\
-trio==0.30.0\
-trio-websocket==0.12.2\
-typing_extensions==4.14.1\
-tzdata==2025.2\
-urllib3==2.5.0\
-websocket-client==1.8.0\
-wsproto==1.2.0\
+[Poetry](https://python-poetry.org/) 2.3.4 — менеджер зависимостей
+
+Основные зависимости (см. `pyproject.toml`, точные версии — в `poetry.lock`):
+
+| Пакет | Версия |
+| --- | --- |
+| allure-pytest | >= 2.15.0, < 3.0.0 |
+| faker | >= 37.6.0, < 38.0.0 |
+| pytest | >= 8.4.1, < 9.0.0 |
+| pytest-rerunfailures | >= 15.1, < 16.0 |
+| pytest-xdist | >= 3.8.0, < 4.0.0 |
+| python-dotenv | >= 1.1.1, < 2.0.0 |
+| selenium | >= 4.35.0, < 5.0.0 |
+
 ___
 
 ## Структура проекта
@@ -61,9 +44,12 @@ ___
     + :page_facing_up: **test_login_page** *- Тесты страницы авторизации*
     + :page_facing_up: **test_main_page** *- Тесты главной страницы*
     + :page_facing_up: **test_product_page** *- Тесты страницы товара*
-  + :page_facing_up: **conftest** *- Фикстуры для тестов*
+  + :page_facing_up: **conftest.py** *- Фикстуры для тестов*
   + :page_facing_up: **pytest.ini** *- Файл конфигурации для библиотеки Pytest*
-  + :page_facing_up: **requirements.txt** *- Зависимости*
+  + :page_facing_up: **pyproject.toml** *- Описание проекта и зависимости*
+  + :page_facing_up: **poetry.lock** *- Зафиксированные версии зависимостей*
+  + :page_facing_up: **Dockerfile** *- Образ для запуска тестов в Docker*
+  + :page_facing_up: **docker-compose.yml** *- Сценарии запуска тестов и отчёта Allure*
 ___
 
 ### Схема проектирования
@@ -90,32 +76,58 @@ ___
 ```git clone https://github.com/shmurge/TestShopQA```
 2. Перейти в репозиторий\
 ```cd TestShopQA```
-3. Установка зависимостей\
-```pip install -r requirements.txt```
+3. Установить [Poetry](https://python-poetry.org/docs/#installation) (рекомендуется версия 2.3.4)
+4. Установить зависимости проекта\
+```poetry install```
 
+Зависимости описаны в `pyproject.toml`. Файл `requirements.txt` в проекте не используется.
 
 ## Запуск тестов
+
 Перед запуском:
-+ создайте в корневой директории файл .env
++ создайте в корневой директории файл `.env`
 + запишите туда валидные данные пользователя,
 зарегистрированного в приложении TestShopQA в формате:\
-LOGIN='электронная почта'\
-USERNAME='ФИО'\
-PASSWORD='пароль пользователя'
+`LOGIN='электронная почта'`\
+`USERNAME='ФИО'`\
+`PASSWORD='пароль пользователя'`
+
 ---
-Используйте следующие скрипты\
-+ Для запуска в браузере chrome (по умолчанию установлен chrome):\
-```pytest -v -s --tb=line --reruns=3 --headless --alluredir allure-report```\
-где reruns - количество перезапусков теста в случае падения\
---headless фоновый режим работы браузера (для запуска в обычном режиме уберите параметр --headless)
---alluredir allure_report создает директорию allure_report в корне проекта с отчетом по прогону
-+ Для запуска в браузере firefox:\
-```pytest -v -s --tb=line --reruns=3 --browser=firefox --headless --alluredir allure-report```
+Используйте следующие команды (через Poetry):
+
++ Для запуска в браузере Chrome (по умолчанию):\
+```poetry run pytest -v -s --tb=line --reruns=3 --headless --alluredir=allure-results```\
+где `reruns` — количество перезапусков теста в случае падения;\
+`--headless` — фоновый режим работы браузера (для запуска в обычном режиме уберите параметр `--headless`);\
+`--alluredir=allure-results` — создаёт директорию `allure-results` в корне проекта с результатами прогона
+
++ Для запуска в браузере Firefox:\
+```poetry run pytest -v -s --tb=line --reruns=3 --browser=firefox --headless --alluredir=allure-results```
+
 + Для запуска тестов в несколько потоков:\
-```pytest -v -s --tb=line --reruns=3 -n=auto --headless --alluredir allure-report```\
-где n - количество потоков (2, 3, 5 итд),\auto автоматически запустит максимально возможное количество потоков
-+ Для запуска отчета по прогону:\
-```allure serve allure_report```\
-после перейдите в браузер (если редирект не произошел автоматически)\
-перед следующим прогоном рекомендуется очистить директорию allure_report\
+```poetry run pytest -v -s --tb=line --reruns=3 -n=auto --headless --alluredir=allure-results```\
+где `-n` — количество потоков (`2`, `3`, `5` и т.д.), `auto` — максимально возможное количество потоков
+
++ Для просмотра отчёта Allure:\
+```allure serve allure-results```\
+после перейдите в браузер (если редирект не произошёл автоматически);\
+перед следующим прогоном рекомендуется очистить директорию `allure-results`
+
+## Запуск в Docker
+
+В образе установлены Python, Poetry, браузеры (Chrome/Chromium и Firefox), Allure и зависимости из `poetry.lock`.
+
+1. Собрать образ (при необходимости):\
+```docker compose build```
+2. Передать переменные окружения из `.env` (или экспортировать `LOGIN`, `USERNAME`, `PASSWORD`)
+3. Запустить тесты в Chrome:\
+```docker compose up run_tests_in_chrome```
+4. Запустить тесты в Firefox:\
+```docker compose up run_tests_in_firefox```
+5. Сгенерировать HTML-отчёт Allure:\
+```docker compose up report```
+
+При монтировании проекта в контейнер не используйте локальный `.venv` с хоста (он собран под другую ОС). Для локальной разработки удобно хранить виртуальное окружение Poetry вне каталога проекта:\
+```poetry config virtualenvs.in-project false```
+
 ___
